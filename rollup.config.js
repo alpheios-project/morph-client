@@ -11,7 +11,7 @@ export default {
       }
     })
   ],
-  moduleName: 'AlpheiosTuftsAdapter',
+  moduleName: 'BaseAdapter',
   targets: [
     {
       dest: 'dist/alpheios-morph-client.js',
