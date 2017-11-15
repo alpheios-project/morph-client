@@ -1,11 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve'
-import string from 'rollup-plugin-string'
 export default {
-  entry: 'src/tufts/adapter.js',
+  entry: 'src/base_adapter.js',
   plugins: [
-    string({
-      include: ['tests/data/**/*.json']
-    }),
     resolve({
       module: true, // Default: true
       jsnext: true,  // Default: false
@@ -18,8 +14,9 @@ export default {
   moduleName: 'AlpheiosTuftsAdapter',
   targets: [
     {
-      dest: 'dist/alpheios-tufts-adapter.js',
-      format: 'umd'
+      dest: 'dist/alpheios-morph-client.js',
+      format: 'es',
+      sourceMap: true
     }
   ]
 }

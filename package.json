@@ -2,7 +2,7 @@
   "name": "alpheios-morph-client",
   "version": "0.0.1",
   "description": "Alpheios Morphology Client Library",
-  "main": "src/base_adapter.js",
+  "main": "dist/alpheios-morph-client.js",
   "scripts": {
     "test": "standard --fix && jest",
     "build": "rollup -c rollup.config.js",
