@@ -22,17 +22,21 @@ class BaseAdapter {
    *                    with the results of the analysis
    */
   fetch (lang, word) {
-    let url = this.prepareRequestUrl(lang, word)
+    let url = this.prepareRequestUrl(lang, word);
     return new Promise((resolve, reject) => {
-      window.fetch(url).then(
-          function (response) {
-            let json = response.json()
-            resolve(json)
+      if (url) {
+        window.fetch(url).then(
+            function (response) {
+              let json = response.json();
+              resolve(json);
+            }
+          ).catch((error) => {
+            reject(error);
           }
-        ).catch((error) => {
-          reject(error)
-        }
-        )
+        );
+      } else {
+        reject(new Error(`Unable to prepare parser request url for ${lang}`));
+      }
     })
   }
 
@@ -46,10 +50,10 @@ class BaseAdapter {
   fetchTestData (lang, word) {
     return new Promise((resolve, reject) => {
       try {
-        let data = {}
-        resolve(data)
+        let data = {};
+        resolve(data);
       } catch (error) {
-        reject(error)
+        reject(error);
       }
     })
   }
@@ -65,5 +69,5 @@ class BaseAdapter {
   }
 }
 
-export default BaseAdapter
-// # sourceMappingURL=alpheios-morph-client.js.map
+export default BaseAdapter;
+//# sourceMappingURL=alpheios-morph-client.js.map
