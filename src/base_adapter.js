@@ -24,15 +24,19 @@ class BaseAdapter {
   fetch (lang, word) {
     let url = this.prepareRequestUrl(lang, word)
     return new Promise((resolve, reject) => {
-      window.fetch(url).then(
-          function (response) {
-            let json = response.json()
-            resolve(json)
+      if (url) {
+        window.fetch(url).then(
+            function (response) {
+              let json = response.json()
+              resolve(json)
+            }
+          ).catch((error) => {
+            reject(error)
           }
-        ).catch((error) => {
-          reject(error)
-        }
         )
+      } else {
+        reject(new Error(`Unable to prepare parser request url for ${lang}`))
+      }
     })
   }
 
