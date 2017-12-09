@@ -2,10 +2,11 @@
   "name": "alpheios-morph-client",
   "version": "0.0.1",
   "description": "Alpheios Morphology Client Library",
-  "main": "dist/alpheios-morph-client.js",
+  "main": "dist/alpheios-morph-client.standalone.js",
+  "moduleExternal": "dist/alpheios-morph-client.module-external.js",
   "scripts": {
     "test": "standard --fix && jest",
-    "build": "rollup -c rollup.config.js",
+    "build": "node ./rollup.build.js",
     "lint": "standard --fix"
   },
   "repository": {
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/alpheios-project/morph-client#readme",
   "devDependencies": {
+    "alpheios-data-models": "git://github.com/alpheios-project/data-models.git",
     "babel-jest": "^21.2.0",
     "babel-preset-es2015": "^6.24.1",
     "jest": "^21.2.1",
@@ -36,8 +38,5 @@
     "transformIgnorePatterns": [
       "node_modules/?!(alpheios-data-models)"
     ]
-  },
-  "dependencies": {
-    "alpheios-data-models": "github:alpheios-project/data-models"
   }
 }
