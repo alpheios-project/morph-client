@@ -70,4 +70,4 @@ class BaseAdapter {
 }
 
 export default BaseAdapter;
-//# sourceMappingURL=alpheios-morph-client.js.map
+//# sourceMappingURL=alpheios-morph-client.standalone.js.map
