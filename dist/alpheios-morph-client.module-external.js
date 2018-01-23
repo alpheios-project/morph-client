@@ -78,4 +78,3 @@ class BaseAdapter {
 }
 
 export default BaseAdapter;
-//# sourceMappingURL=alpheios-morph-client.js.map
