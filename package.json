@@ -1,6 +1,6 @@
 {
   "name": "alpheios-morph-client",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Alpheios Morphology Client Library",
   "main": "dist/alpheios-morph-client.standalone.js",
   "moduleExternal": "dist/alpheios-morph-client.module-external.js",
