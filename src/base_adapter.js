@@ -15,6 +15,18 @@ class BaseAdapter {
   }
 
   /**
+   * Lookup the supplied word using the preconfigured engines and
+   * and return a Homonym
+   * @param {string} lang - ISO 639-2 language code for the word
+   * @param {string} word - the word to lookup
+   * @return {Homonym} homonym object
+   */
+  async getHomonym (lang, word) {
+    // implement in the derived adapater class
+    return undefined
+  }
+
+  /**
    * Fetch response from a remote URL
    * @param {string} lang - the language code
    * @param {string} word - the word to lookup
