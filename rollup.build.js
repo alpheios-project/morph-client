@@ -1,7 +1,11 @@
 const rollup = require('rollup')
+const string = require('rollup-plugin-string')
 const resolve = require('rollup-plugin-node-resolve')
 
 const defaultPlugins = [
+  string({
+    include: ['src/tufts/engine/data/**/*.json', 'src/**/*.json']
+  }),
   resolve({
     // use "module" field for ES6 module if possible
     module: true, // Default: true
@@ -13,7 +17,7 @@ const defaultPlugins = [
 
 // Standalone bundle
 rollup.rollup({
-  entry: 'src/base_adapter.js',
+  entry: 'src/driver.js',
   moduleName: 'BaseAdapter',
   plugins: defaultPlugins
 }).then(bundle => {
@@ -29,7 +33,7 @@ rollup.rollup({
 
 // Module bundle
 rollup.rollup({
-  entry: 'src/base_adapter.js',
+  entry: 'src/driver.js',
   external: ['alpheios-data-models'],
   moduleName: 'BaseAdapter',
   plugins: defaultPlugins

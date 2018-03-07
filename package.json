@@ -1,6 +1,6 @@
 {
   "name": "alpheios-morph-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Alpheios Morphology Client Library",
   "main": "dist/alpheios-morph-client.standalone.js",
   "moduleExternal": "dist/alpheios-morph-client.module-external.js",
@@ -30,6 +30,7 @@
     "rollup-plugin-commonjs": "^8.2.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-string": "^2.0.2",
     "standard": "*"
   },
   "jest": {
