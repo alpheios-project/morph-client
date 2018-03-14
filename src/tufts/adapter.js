@@ -211,28 +211,28 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           mappingData.mapFeature(inflection, inflectionJSON, 'morph', 'morph', this.config.allowUnknownValues)
         }
         // we only use the inflection if it tells us something the dictionary details do not
-        if (inflection[Models.Feature.types.grmCase] ||
-          inflection[Models.Feature.types.tense] ||
-          inflection[Models.Feature.types.mood] ||
-          inflection[Models.Feature.types.voice] ||
-          inflection[Models.Feature.types.person] ||
-          inflection[Models.Feature.types.comparison] ||
-          inflection[Models.Feature.types.stemtype] ||
-          inflection[Models.Feature.types.derivtype] ||
-          inflection[Models.Feature.types.dialect] ||
-          inflection[Models.Feature.types.morph] ||
-          inflection[Models.Feature.types.example]) {
+        if (inflection[Models.GrmFeature.types.grmCase] ||
+          inflection[Models.GrmFeature.types.tense] ||
+          inflection[Models.GrmFeature.types.mood] ||
+          inflection[Models.GrmFeature.types.voice] ||
+          inflection[Models.GrmFeature.types.person] ||
+          inflection[Models.GrmFeature.types.comparison] ||
+          inflection[Models.GrmFeature.types.stemtype] ||
+          inflection[Models.GrmFeature.types.derivtype] ||
+          inflection[Models.GrmFeature.types.dialect] ||
+          inflection[Models.GrmFeature.types.morph] ||
+          inflection[Models.GrmFeature.types.example]) {
           inflections.push(inflection)
         }
         // inflection can provide lemma decl, pofs, conj
         for (let lemma of lemmas) {
-          if (!lemma.features[Models.Feature.types.declension]) {
+          if (!lemma.features[Models.GrmFeature.types.declension]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'decl', 'declension', this.config.allowUnknownValues)
           }
-          if (!lemma.features[Models.Feature.types.part]) {
+          if (!lemma.features[Models.GrmFeature.types.part]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues)
           }
-          if (!lemma.features[Models.Feature.types.conjugation]) {
+          if (!lemma.features[Models.GrmFeature.types.conjugation]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues)
           }
         }

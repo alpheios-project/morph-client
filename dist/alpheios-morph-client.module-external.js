@@ -1,4 +1,4 @@
-import { ArabicLanguageModel, Constants, Definition, Feature, FeatureImporter, GreekLanguageModel, Homonym, Inflection, LatinLanguageModel, Lemma, Lexeme, PersianLanguageModel, ResourceProvider } from 'alpheios-data-models'
+import { ArabicLanguageModel, Constants, Definition, FeatureImporter, GreekLanguageModel, GrmFeature, Homonym, Inflection, LatinLanguageModel, Lemma, Lexeme, PersianLanguageModel, ResourceProvider } from 'alpheios-data-models'
 
 /**
  * Base Adapter Class for a Morphology Service Client
@@ -130,7 +130,7 @@ class ImportData {
     }
     // may be overridden by specifc engine use via setLexemeFilter - default assumes we will have a part of speech
     this.reportLexeme = function (lexeme) {
-      return lexeme.lemma.features[Feature.types.part]
+      return lexeme.lemma.features[GrmFeature.types.part]
     }
   }
 
@@ -226,7 +226,7 @@ class ImportData {
       }
     }
     for (let value of values) {
-      let features = this[Feature.types[featureName]].get(
+      let features = this[GrmFeature.types[featureName]].get(
         value, inputElem[inputName].order, allowUnknownValues)
       if (Array.isArray(features)) {
         mapped.push(...features)
@@ -241,7 +241,7 @@ class ImportData {
 }
 
 let data = new ImportData(LatinLanguageModel, 'whitakerLat')
-let types = Feature.types
+let types = GrmFeature.types
 
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
@@ -254,7 +254,7 @@ Types and values that are unknown (undefined) will be skipped during parsing.
 // TODO  - per inflections.xsd
 // Whitakers Words uses packon and tackon in POFS, not sure how
 
-data.addFeature(Feature.types.gender).importer
+data.addFeature(GrmFeature.types.gender).importer
   .map('common',
     [ data.model.features[types.gender][Constants.GEND_MASCULINE],
       data.model.features[types.gender][Constants.GEND_FEMININE]
@@ -265,7 +265,7 @@ data.addFeature(Feature.types.gender).importer
       data.model.features[types.gender][Constants.GEND_NEUTER]
     ])
 
-data.addFeature(Feature.types.tense).importer
+data.addFeature(GrmFeature.types.tense).importer
   .map('future_perfect', data.model.features[types.tense][Constants.TENSE_FUTURE_PERFECT])
 
 data.setLemmaParser(function (lemma) {
@@ -289,7 +289,7 @@ data.setLemmaParser(function (lemma) {
 })
 
 let data$1 = new ImportData(GreekLanguageModel, 'morpheusgrc')
-let types$1 = Feature.types
+let types$1 = GrmFeature.types
 
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
@@ -299,28 +299,28 @@ data.addFeature(typeName).add(providerValueName, LibValueName);
 Types and values that are unknown (undefined) will be skipped during parsing.
  */
 
-data$1.addFeature(Feature.types.gender).importer
+data$1.addFeature(GrmFeature.types.gender).importer
   .map('masculine feminine',
     [ data$1.model.features[types$1.gender][Constants.GEND_MASCULINE],
       data$1.model.features[types$1.gender][Constants.GEND_FEMININE]
     ])
 
-data$1.addFeature(Feature.types.declension).importer
+data$1.addFeature(GrmFeature.types.declension).importer
   .map('1st & 2nd',
     [ data$1.model.features[types$1.declension][Constants.ORD_1ST],
       data$1.model.features[types$1.declension][Constants.ORD_2ND]
     ])
 
 let data$2 = new ImportData(ArabicLanguageModel, 'aramorph')
-let types$2 = Feature.types
+let types$2 = GrmFeature.types
 
-data$2.addFeature(Feature.types.part).importer
+data$2.addFeature(GrmFeature.types.part).importer
   .map('proper noun', [data$2.model.features[types$2.part][Constants.POFS_NOUN]])
 
 let data$3 = new ImportData(PersianLanguageModel, 'hazm')
-let types$3 = Feature.types
+let types$3 = GrmFeature.types
 
-data$3.addFeature(Feature.types.part).importer
+data$3.addFeature(GrmFeature.types.part).importer
   .map('proper noun', [data$3.model.features[types$3.part][Constants.POFS_NOUN]])
 
 // hazm allow all lemmas in without respect features as all we use it for is lemmatizing
@@ -558,28 +558,28 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           mappingData.mapFeature(inflection, inflectionJSON, 'morph', 'morph', this.config.allowUnknownValues)
         }
         // we only use the inflection if it tells us something the dictionary details do not
-        if (inflection[Feature.types.grmCase] ||
-          inflection[Feature.types.tense] ||
-          inflection[Feature.types.mood] ||
-          inflection[Feature.types.voice] ||
-          inflection[Feature.types.person] ||
-          inflection[Feature.types.comparison] ||
-          inflection[Feature.types.stemtype] ||
-          inflection[Feature.types.derivtype] ||
-          inflection[Feature.types.dialect] ||
-          inflection[Feature.types.morph] ||
-          inflection[Feature.types.example]) {
+        if (inflection[GrmFeature.types.grmCase] ||
+          inflection[GrmFeature.types.tense] ||
+          inflection[GrmFeature.types.mood] ||
+          inflection[GrmFeature.types.voice] ||
+          inflection[GrmFeature.types.person] ||
+          inflection[GrmFeature.types.comparison] ||
+          inflection[GrmFeature.types.stemtype] ||
+          inflection[GrmFeature.types.derivtype] ||
+          inflection[GrmFeature.types.dialect] ||
+          inflection[GrmFeature.types.morph] ||
+          inflection[GrmFeature.types.example]) {
           inflections.push(inflection)
         }
         // inflection can provide lemma decl, pofs, conj
         for (let lemma of lemmas) {
-          if (!lemma.features[Feature.types.declension]) {
+          if (!lemma.features[GrmFeature.types.declension]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'decl', 'declension', this.config.allowUnknownValues)
           }
-          if (!lemma.features[Feature.types.part]) {
+          if (!lemma.features[GrmFeature.types.part]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues)
           }
-          if (!lemma.features[Feature.types.conjugation]) {
+          if (!lemma.features[GrmFeature.types.conjugation]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues)
           }
         }

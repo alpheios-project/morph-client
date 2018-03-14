@@ -27,16 +27,16 @@ describe('TuftsAdapter object', () => {
 
   test('default values are returned', () => {
     let adapter = new TuftsAdapter()
-    let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.grmCase].get('nominative')
-    let def = new Models.Feature('nominative', Models.Feature.types.grmCase, 'grc')
+    let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.grmCase].get('nominative')
+    let def = new Models.GrmFeature('nominative', Models.GrmFeature.types.grmCase, 'grc')
     expect(retrieved).toEqual(def)
   })
 
   test('mapped values are returned', () => {
     let adapter = new TuftsAdapter()
-    let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.gender].get('masculine feminine')
-    let def = [ new Models.Feature(Models.Constants.GEND_MASCULINE, Models.Feature.types.gender, 'grc'),
-      new Models.Feature(Models.Constants.GEND_FEMININE, Models.Feature.types.gender, 'grc')
+    let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.gender].get('masculine feminine')
+    let def = [ new Models.GrmFeature(Models.Constants.GEND_MASCULINE, Models.GrmFeature.types.gender, 'grc'),
+      new Models.GrmFeature(Models.Constants.GEND_FEMININE, Models.GrmFeature.types.gender, 'grc')
     ]
     expect(retrieved).toEqual(def)
   })
@@ -44,14 +44,14 @@ describe('TuftsAdapter object', () => {
   test('unmapped values with no defaults throws an error if unknown values not allowed', () => {
     let adapter = new TuftsAdapter({'allowUnknownValues': false})
     expect(() => {
-      let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.person].get('1') // eslint-disable-line no-unused-vars
+      let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.person].get('1') // eslint-disable-line no-unused-vars
     }).toThrowError(/unknown value/i)
   })
 
   test('unmapped values with no defaults still works if unknown values allowed', () => {
     let adapter = new TuftsAdapter()
-    let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.person].get('1', 1, adapter.config.allowUnknownValues) // eslint-disable-line no-unused-vars
-    let def = new Models.Feature('1', Models.Feature.types.person, 'grc')
+    let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.person].get('1', 1, adapter.config.allowUnknownValues) // eslint-disable-line no-unused-vars
+    let def = new Models.GrmFeature('1', Models.GrmFeature.types.person, 'grc')
 
     expect(retrieved).toEqual(def)
   })
@@ -74,7 +74,7 @@ describe('TuftsAdapter object', () => {
     expect(adjMas.length).toEqual(1)
     expect(nounMare[0].inflections.length).toEqual(4)
     let vocative = 0
-    for (let c of nounMare[0].inflections.map(i => i[Models.Feature.types.grmCase])) {
+    for (let c of nounMare[0].inflections.map(i => i[Models.GrmFeature.types.grmCase])) {
       for (let f of c) {
         if (f.hasValue('vocative')) {
           vocative++

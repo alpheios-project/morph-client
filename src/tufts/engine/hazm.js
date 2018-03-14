@@ -2,9 +2,9 @@ import ImportData from '../lib'
 import * as Models from 'alpheios-data-models'
 
 let data = new ImportData(Models.PersianLanguageModel, 'hazm')
-let types = Models.Feature.types
+let types = Models.GrmFeature.types
 
-data.addFeature(Models.Feature.types.part).importer
+data.addFeature(Models.GrmFeature.types.part).importer
   .map('proper noun', [data.model.features[types.part][Models.Constants.POFS_NOUN]])
 
 // hazm allow all lemmas in without respect features as all we use it for is lemmatizing

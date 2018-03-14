@@ -596,6 +596,166 @@ class DefinitionSet {
   }
 }
 
+/**
+ * This is a temporary placeholder for an i18n library
+ */
+const i18n = {
+  en: {
+    feminine: {
+      full: 'feminine',
+      abbr: 'f'
+    },
+    masculine: {
+      full: 'masculine',
+      abbr: 'm'
+    },
+    neuter: {
+      full: 'neuter',
+      abbr: 'n'
+    }
+  }
+}
+
+/**
+ * Wrapper class for a (grammatical, usually) feature, such as part of speech or declension. Keeps both value and type information.
+ */
+class GrmFeature {
+  /**
+     * Initializes a Feature object
+     * @param {string | string[]} value - A single feature value or, if this feature could have multiple
+     * values, an array of values.
+     * Multiple values do not allow to use a sort order. Because of this, it's better to use
+     * array of multiple Feature objects with single value each instead of a single Feature object
+     * with multiple values.
+     * Multiple values are left for backward compatibility only. Please do not use them as they
+     * will be removed in the future.
+     * @param {string} type - A type of the feature, allowed values are specified in 'types' object.
+     * @param {string | symbol} language - A language of a feature, allowed values are specified in 'languages' object.
+     * @param {int} sortOrder - an integer used for sorting
+     */
+  constructor (value, type, language, sortOrder = 1) {
+    if (!GrmFeature.types.isAllowed(type)) {
+      throw new Error('Features of "' + type + '" type are not supported.')
+    }
+    if (!value) {
+      throw new Error('Feature should have a non-empty value.')
+    }
+    if (!type) {
+      throw new Error('Feature should have a non-empty type.')
+    }
+    if (!language) {
+      throw new Error('Feature constructor requires a language')
+    }
+    this.value = value
+    this.type = type
+    this.languageID = undefined
+    this.languageCode = undefined
+    ;({languageID: this.languageID, languageCode: this.languageCode} = LanguageModelFactory.getLanguageAttrs(language))
+    this.sortOrder = sortOrder
+  }
+
+  /**
+   * This is a compatibility function for legacy code.
+   * @return {String} A language code.
+   */
+  get language () {
+    console.warn(`Please use a "languageID" instead of a "language"`)
+    return this.languageCode
+  }
+
+  isEqual (feature) {
+    if (Array.isArray(feature.value)) {
+      // `feature` is a single object with multiple `value` properties. This feature will be sunset
+      // as it does not allow to use sort order on Feature objects.
+      if (!Array.isArray(this.value) || this.value.length !== feature.value.length) {
+        return false
+      }
+      let equal = this.type === feature.type && LanguageModelFactory.compareLanguages(this.languageID, feature.languageID)
+      equal = equal && this.value.every(function (element, index) {
+        return element === feature.value[index]
+      })
+      return equal
+    } else {
+      return LanguageModelFactory.compareLanguages(this.languageID, feature.languageID) && this.type === feature.type && this.value === feature.value
+    }
+  }
+
+  /**
+   * examine the feature for a specific value
+   * @param {string} value
+   * @returns {boolean} true if the value is included in the feature's values
+   */
+  hasValue (value) {
+    if (Array.isArray(this.value)) {
+      return this.value.includes(value)
+    } else {
+      return this.value === value
+    }
+  }
+
+  /**
+   * string representation of a feature
+   * @return {string}
+   */
+  toString () {
+    if (Array.isArray(this.value)) {
+      return this.value.join(',')
+    } else {
+      return this.value
+    }
+  }
+
+  /**
+   * a locale-specific abbreviation for a feature's values
+   * @return {string}
+   */
+  toLocaleStringAbbr (lang = 'en') {
+    if (Array.isArray(this.value)) {
+      return this.value.map((v) => this.toLocaleStringAbbr(v, lang))
+    } else {
+      return i18n[lang][this.value].abbr
+    }
+  }
+}
+// Should have no spaces in values in order to be used in HTML templates
+GrmFeature.types = {
+  word: 'word',
+  part: 'part of speech', // Part of speech
+  number: 'number',
+  'case': 'case',
+  grmCase: 'case', // A synonym of `case`
+  declension: 'declension',
+  gender: 'gender',
+  type: 'type',
+  'class': 'class',
+  grmClass: 'class', // A synonym of `class`
+  conjugation: 'conjugation',
+  comparison: 'comparison',
+  tense: 'tense',
+  voice: 'voice',
+  mood: 'mood',
+  person: 'person',
+  frequency: 'frequency', // How frequent this word is
+  meaning: 'meaning', // Meaning of a word
+  source: 'source', // Source of word definition
+  footnote: 'footnote', // A footnote for a word's ending
+  dialect: 'dialect', // a dialect identifier
+  note: 'note', // a general note
+  pronunciation: 'pronunciation',
+  age: 'age',
+  area: 'area',
+  geo: 'geo', // geographical data
+  kind: 'kind', // verb kind information
+  derivtype: 'derivtype',
+  stemtype: 'stemtype',
+  morph: 'morph', // general morphological information
+  var: 'var', // variance?
+  isAllowed (value) {
+    let v = `${value}`
+    return Object.values(this).includes(v)
+  }
+}
+
 class FeatureImporter {
   constructor (defaults = []) {
     this.hash = {}
@@ -669,7 +829,7 @@ class FeatureType {
      * @param {String | Symbol} language - A language of a feature type.
      */
   constructor (type, values, language) {
-    if (!Feature.types.isAllowed(type)) {
+    if (!GrmFeature.types.isAllowed(type)) {
       throw new Error('Features of "' + type + '" type are not supported.')
     }
     if (!values || !Array.isArray(values)) {
@@ -695,11 +855,11 @@ class FeatureType {
       this._orderIndex.push(value)
       if (Array.isArray(value)) {
         for (let element of value) {
-          this[element] = new Feature(element, this.type, this.languageID)
+          this[element] = new GrmFeature(element, this.type, this.languageID)
           this._orderLookup[element] = index
         }
       } else {
-        this[value] = new Feature(value, this.type, this.languageID)
+        this[value] = new GrmFeature(value, this.type, this.languageID)
         this._orderLookup[value] = index
       }
     }
@@ -727,11 +887,11 @@ class FeatureType {
      * This can be especially useful for features that do not set: a list of predefined values, such as footnotes.
      * @param value
      * @param {int} sortOrder
-     * @returns {Feature}
+     * @returns {GrmFeature}
      */
   get (value, sortOrder = 1) {
     if (value) {
-      return new Feature(value, this.type, this.languageID, sortOrder)
+      return new GrmFeature(value, this.type, this.languageID, sortOrder)
     } else {
       throw new Error('A non-empty value should be provided.')
     }
@@ -766,12 +926,12 @@ class FeatureType {
   /**
      * Return copies of all feature values as Feature objects in a sorted array, according to feature type's sort order.
      * For a similar function that returns strings instead of Feature objects see orderedValues().
-     * @returns {Feature[] | Feature[][]} Array of feature values sorted according to orderIndex.
+     * @returns {GrmFeature[] | GrmFeature[][]} Array of feature values sorted according to orderIndex.
      * If particular feature contains multiple feature values (i.e. `masculine` and `feminine` values combined),
      * an array of Feature objects will be returned instead of a single Feature object, as for single feature values.
      */
   get orderedFeatures () {
-    return this.orderedValues.map((value) => new Feature(value, this.type, this.languageID))
+    return this.orderedValues.map((value) => new GrmFeature(value, this.type, this.languageID))
   }
 
   /**
@@ -804,7 +964,7 @@ class FeatureType {
      * Sets an order of grammatical feature values for a grammatical feature. Used mostly for sorting, filtering,
      * and displaying.
      *
-     * @param {Feature[] | Feature[][]} values - a list of grammatical features that specify their order for
+     * @param {GrmFeature[] | GrmFeature[][]} values - a list of grammatical features that specify their order for
      * sorting and filtering. Some features can be grouped as [[genders.masculine, genders.feminine], LibLatin.genders.neuter].
      * It means that genders.masculine and genders.feminine belong to the same group. They will have the same index
      * and will be stored inside an _orderIndex as an array. genders.masculine and genders.feminine will be grouped together
@@ -1063,7 +1223,7 @@ class LanguageModel {
      */
     return new Map([
       [
-        Feature.types.part,
+        GrmFeature.types.part,
         [
           POFS_ADVERB,
           POFS_ADVERBIAL,
@@ -1085,7 +1245,7 @@ class LanguageModel {
         ]
       ],
       [
-        Feature.types.gender,
+        GrmFeature.types.gender,
         [
           GEND_MASCULINE,
           GEND_FEMININE,
@@ -1093,14 +1253,14 @@ class LanguageModel {
         ]
       ],
       [
-        Feature.types.type,
+        GrmFeature.types.type,
         [
           TYPE_REGULAR,
           TYPE_IRREGULAR
         ]
       ],
       [
-        Feature.types.person,
+        GrmFeature.types.person,
         [
           ORD_1ST,
           ORD_2ND,
@@ -1108,67 +1268,67 @@ class LanguageModel {
         ]
       ],
       [
-        Feature.types.age,
+        GrmFeature.types.age,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.area,
+        GrmFeature.types.area,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.source,
+        GrmFeature.types.source,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.frequency,
+        GrmFeature.types.frequency,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.geo,
+        GrmFeature.types.geo,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.pronunciation,
+        GrmFeature.types.pronunciation,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.kind,
+        GrmFeature.types.kind,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.comparison,
+        GrmFeature.types.comparison,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.morph,
+        GrmFeature.types.morph,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.stemtype,
+        GrmFeature.types.stemtype,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
       ],
       [
-        Feature.types.derivtype,
+        GrmFeature.types.derivtype,
         [
           FeatureType.UNRESTRICTED_VALUE
         ]
@@ -1364,7 +1524,7 @@ class LanguageModel {
     // group inflections by part of speech
     for (let infl of inflections) {
       let groupingKey = new InflectionGroupingKey(infl,
-        [Feature.types.part, Feature.types.dialect, Feature.types.comparison],
+        [GrmFeature.types.part, GrmFeature.types.dialect, GrmFeature.types.comparison],
         {
           prefix: infl.prefix,
           suffix: infl.suffix,
@@ -1385,18 +1545,18 @@ class LanguageModel {
       for (let infl of kv[1].inflections) {
         let keyprop
         let isCaseInflectionSet = false
-        if (infl[Feature.types.grmCase]) {
+        if (infl[GrmFeature.types.grmCase]) {
           // grouping on number if case is defined
-          keyprop = Feature.types.number
+          keyprop = GrmFeature.types.number
           isCaseInflectionSet = true
-        } else if (infl[Feature.types.tense]) {
+        } else if (infl[GrmFeature.types.tense]) {
           // grouping on tense if tense is defined but not case
-          keyprop = Feature.types.tense
-        } else if (infl[Feature.types.part] === POFS_VERB) {
+          keyprop = GrmFeature.types.tense
+        } else if (infl[GrmFeature.types.part] === POFS_VERB) {
           // grouping on no case or tense but a verb
-          keyprop = Feature.types.part
-        } else if (infl[Feature.types.part] === POFS_ADVERB) {
-          keyprop = Feature.types.part
+          keyprop = GrmFeature.types.part
+        } else if (infl[GrmFeature.types.part] === POFS_ADVERB) {
+          keyprop = GrmFeature.types.part
           // grouping on adverbs without case or tense
         } else {
           keyprop = 'misc'
@@ -1422,8 +1582,8 @@ class LanguageModel {
         let nextGroup = new Map()
         let sortOrder = new Map()
         for (let infl of kv[1].inflections) {
-          let sortkey = infl[Feature.types.grmCase] ? Math.max(infl[Feature.types.grmCase].map((f) => { return f.sortOrder })) : 1
-          let groupingKey = new InflectionGroupingKey(infl, [Feature.types.tense, Feature.types.voice])
+          let sortkey = infl[GrmFeature.types.grmCase] ? Math.max(infl[GrmFeature.types.grmCase].map((f) => { return f.sortOrder })) : 1
+          let groupingKey = new InflectionGroupingKey(infl, [GrmFeature.types.tense, GrmFeature.types.voice])
           let groupingKeyStr = groupingKey.toString()
           if (nextGroup.has(groupingKeyStr)) {
             nextGroup.get(groupingKeyStr).append(infl)
@@ -1454,8 +1614,8 @@ class LanguageModel {
           for (let infl of group.inflections) {
             // set key is case comp gend pers mood sort
             let groupingKey = new InflectionGroupingKey(infl,
-              [Feature.types.grmCase, Feature.types.comparison, Feature.types.gender, Feature.types.number, Feature.types.person,
-                Feature.types.tense, Feature.types.mood, Feature.types.sort, Feature.types.voice])
+              [GrmFeature.types.grmCase, GrmFeature.types.comparison, GrmFeature.types.gender, GrmFeature.types.number, GrmFeature.types.person,
+                GrmFeature.types.tense, GrmFeature.types.mood, GrmFeature.types.sort, GrmFeature.types.voice])
             let groupingKeyStr = groupingKey.toString()
             if (nextGroup.has(groupingKeyStr)) {
               nextGroup.get(groupingKeyStr).append(infl)
@@ -1502,7 +1662,7 @@ class LatinLanguageModel extends LanguageModel {
     return new Map([
       ...LanguageModel.featureValues,
       [
-        Feature.types.grmClass,
+        GrmFeature.types.grmClass,
         [
           CLASS_PERSONAL,
           CLASS_REFLEXIVE,
@@ -1513,14 +1673,14 @@ class LatinLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.number,
+        GrmFeature.types.number,
         [
           NUM_SINGULAR,
           NUM_PLURAL
         ]
       ],
       [
-        Feature.types.grmCase,
+        GrmFeature.types.grmCase,
         [
           CASE_NOMINATIVE,
           CASE_GENITIVE,
@@ -1532,7 +1692,7 @@ class LatinLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.declension,
+        GrmFeature.types.declension,
         [
           ORD_1ST,
           ORD_2ND,
@@ -1542,7 +1702,7 @@ class LatinLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.tense,
+        GrmFeature.types.tense,
         [
           TENSE_PRESENT,
           TENSE_IMPERFECT,
@@ -1553,14 +1713,14 @@ class LatinLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.voice,
+        GrmFeature.types.voice,
         [
           VOICE_ACTIVE,
           VOICE_PASSIVE
         ]
       ],
       [
-        Feature.types.mood,
+        GrmFeature.types.mood,
         [
           MOOD_INDICATIVE,
           MOOD_SUBJUNCTIVE,
@@ -1573,7 +1733,7 @@ class LatinLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.conjugation,
+        GrmFeature.types.conjugation,
         [
           ORD_1ST,
           ORD_2ND,
@@ -1589,7 +1749,7 @@ class LatinLanguageModel extends LanguageModel {
    */
   static grammarFeatures () {
     // TODO this ideally might be grammar specific
-    return [Feature.types.part, Feature.types.grmCase, Feature.types.mood, Feature.types.declension, Feature.types.tense]
+    return [GrmFeature.types.part, GrmFeature.types.grmCase, GrmFeature.types.mood, GrmFeature.types.declension, GrmFeature.types.tense]
   }
 
   /**
@@ -1658,17 +1818,17 @@ class LatinLanguageModel extends LanguageModel {
       suffixBased: false,
       pronounClassRequired: false
     }
-    if (inflection.hasOwnProperty(Feature.types.part) &&
-      Array.isArray(inflection[Feature.types.part]) &&
-      inflection[Feature.types.part].length === 1) {
-      let partOfSpeech = inflection[Feature.types.part][0]
+    if (inflection.hasOwnProperty(GrmFeature.types.part) &&
+      Array.isArray(inflection[GrmFeature.types.part]) &&
+      inflection[GrmFeature.types.part].length === 1) {
+      let partOfSpeech = inflection[GrmFeature.types.part][0]
       if (partOfSpeech.value === POFS_PRONOUN) {
         grammar.fullFormBased = true
       } else {
         grammar.suffixBased = true
       }
     } else {
-      console.warn(`Unable to set grammar: part of speech data is missing or is incorrect`, inflection[Feature.types.part])
+      console.warn(`Unable to set grammar: part of speech data is missing or is incorrect`, inflection[GrmFeature.types.part])
     }
 
     return grammar
@@ -1695,7 +1855,7 @@ class GreekLanguageModel extends LanguageModel {
     return new Map([
       ...LanguageModel.featureValues,
       [
-        Feature.types.grmClass,
+        GrmFeature.types.grmClass,
         [
           CLASS_DEMONSTRATIVE,
           CLASS_GENERAL_RELATIVE,
@@ -1710,7 +1870,7 @@ class GreekLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.number,
+        GrmFeature.types.number,
         [
           NUM_SINGULAR,
           NUM_PLURAL,
@@ -1718,7 +1878,7 @@ class GreekLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.grmCase,
+        GrmFeature.types.grmCase,
         [
           CASE_NOMINATIVE,
           CASE_GENITIVE,
@@ -1728,7 +1888,7 @@ class GreekLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.declension,
+        GrmFeature.types.declension,
         [
           ORD_1ST,
           ORD_2ND,
@@ -1736,7 +1896,7 @@ class GreekLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.tense,
+        GrmFeature.types.tense,
         [
           TENSE_PRESENT,
           TENSE_IMPERFECT,
@@ -1748,7 +1908,7 @@ class GreekLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.voice,
+        GrmFeature.types.voice,
         [
           VOICE_PASSIVE,
           VOICE_ACTIVE,
@@ -1757,7 +1917,7 @@ class GreekLanguageModel extends LanguageModel {
         ]
       ],
       [
-        Feature.types.mood,
+        GrmFeature.types.mood,
         [
           MOOD_INDICATIVE,
           MOOD_SUBJUNCTIVE,
@@ -1767,7 +1927,7 @@ class GreekLanguageModel extends LanguageModel {
       ],
       [
         // TODO full list of greek dialects
-        Feature.types.dialect,
+        GrmFeature.types.dialect,
         [
           'attic',
           'epic',
@@ -1790,7 +1950,7 @@ class GreekLanguageModel extends LanguageModel {
    */
   static grammarFeatures () {
     // TODO this ideally might be grammar specific
-    return [Feature.types.part, Feature.types.grmCase, Feature.types.mood, Feature.types.declension, Feature.types.tense, Feature.types.voice]
+    return [GrmFeature.types.part, GrmFeature.types.grmCase, GrmFeature.types.mood, GrmFeature.types.declension, GrmFeature.types.tense, GrmFeature.types.voice]
   }
 
   /**
@@ -1875,25 +2035,25 @@ class GreekLanguageModel extends LanguageModel {
       suffixBased: false,
       pronounClassRequired: false
     }
-    if (inflection.hasOwnProperty(Feature.types.part) &&
-      Array.isArray(inflection[Feature.types.part]) &&
-      inflection[Feature.types.part].length === 1) {
-      let partOfSpeech = inflection[Feature.types.part][0]
+    if (inflection.hasOwnProperty(GrmFeature.types.part) &&
+      Array.isArray(inflection[GrmFeature.types.part]) &&
+      inflection[GrmFeature.types.part].length === 1) {
+      let partOfSpeech = inflection[GrmFeature.types.part][0]
       if (partOfSpeech.value === POFS_PRONOUN) {
         constraints.fullFormBased = true
       } else {
         constraints.suffixBased = true
       }
     } else {
-      console.warn(`Unable to set grammar: part of speech data is missing or is incorrect`, inflection[Feature.types.part])
+      console.warn(`Unable to set grammar: part of speech data is missing or is incorrect`, inflection[GrmFeature.types.part])
     }
 
     constraints.pronounClassRequired =
       LanguageModelFactory.compareLanguages(GreekLanguageModel.languageID, inflection.languageID) &&
-      inflection.hasOwnProperty(Feature.types.part) &&
-      Array.isArray(inflection[Feature.types.part]) &&
-      inflection[Feature.types.part].length >= 1 &&
-      inflection[Feature.types.part][0].value === POFS_PRONOUN
+      inflection.hasOwnProperty(GrmFeature.types.part) &&
+      Array.isArray(inflection[GrmFeature.types.part]) &&
+      inflection[GrmFeature.types.part].length >= 1 &&
+      inflection[GrmFeature.types.part][0].value === POFS_PRONOUN
 
     return constraints
   }
@@ -1908,7 +2068,7 @@ class GreekLanguageModel extends LanguageModel {
    * @param {Form[]} forms - An array of known forms of pronouns.
    * @param {string} word - A word we need to find a matching class for.
    * @param {boolean} normalize - Whether normalized forms of words shall be used for comparison.
-   * @return {Feature[]} Matching classes found in an array of Feature objects. If no matching classes found,
+   * @return {GrmFeature[]} Matching classes found in an array of Feature objects. If no matching classes found,
    * returns an empty array.
    */
   static getPronounClasses (forms, word, normalize = true) {
@@ -1926,12 +2086,12 @@ class GreekLanguageModel extends LanguageModel {
       }
     )
     for (const matchingForm of matchingForms) {
-      if (matchingForm.features.hasOwnProperty(Feature.types.grmClass)) {
-        matchingValues.add(matchingForm.features[Feature.types.grmClass])
+      if (matchingForm.features.hasOwnProperty(GrmFeature.types.grmClass)) {
+        matchingValues.add(matchingForm.features[GrmFeature.types.grmClass])
       }
     }
     for (const matchingValue of matchingValues) {
-      classes.push(new Feature(matchingValue, Feature.types.grmClass, GreekLanguageModel.languageID))
+      classes.push(new GrmFeature(matchingValue, GrmFeature.types.grmClass, GreekLanguageModel.languageID))
     }
     return classes
   }
@@ -2159,166 +2319,6 @@ class LanguageModelFactory {
 }
 
 /**
- * This is a temporary placeholder for an i18n library
- */
-const i18n = {
-  en: {
-    feminine: {
-      full: 'feminine',
-      abbr: 'f'
-    },
-    masculine: {
-      full: 'masculine',
-      abbr: 'm'
-    },
-    neuter: {
-      full: 'neuter',
-      abbr: 'n'
-    }
-  }
-}
-
-/**
- * Wrapper class for a (grammatical, usually) feature, such as part of speech or declension. Keeps both value and type information.
- */
-class Feature {
-  /**
-     * Initializes a Feature object
-     * @param {string | string[]} value - A single feature value or, if this feature could have multiple
-     * values, an array of values.
-     * Multiple values do not allow to use a sort order. Because of this, it's better to use
-     * array of multiple Feature objects with single value each instead of a single Feature object
-     * with multiple values.
-     * Multiple values are left for backward compatibility only. Please do not use them as they
-     * will be removed in the future.
-     * @param {string} type - A type of the feature, allowed values are specified in 'types' object.
-     * @param {string | symbol} language - A language of a feature, allowed values are specified in 'languages' object.
-     * @param {int} sortOrder - an integer used for sorting
-     */
-  constructor (value, type, language, sortOrder = 1) {
-    if (!Feature.types.isAllowed(type)) {
-      throw new Error('Features of "' + type + '" type are not supported.')
-    }
-    if (!value) {
-      throw new Error('Feature should have a non-empty value.')
-    }
-    if (!type) {
-      throw new Error('Feature should have a non-empty type.')
-    }
-    if (!language) {
-      throw new Error('Feature constructor requires a language')
-    }
-    this.value = value
-    this.type = type
-    this.languageID = undefined
-    this.languageCode = undefined
-    ;({languageID: this.languageID, languageCode: this.languageCode} = LanguageModelFactory.getLanguageAttrs(language))
-    this.sortOrder = sortOrder
-  }
-
-  /**
-   * This is a compatibility function for legacy code.
-   * @return {String} A language code.
-   */
-  get language () {
-    console.warn(`Please use a "languageID" instead of a "language"`)
-    return this.languageCode
-  }
-
-  isEqual (feature) {
-    if (Array.isArray(feature.value)) {
-      // `feature` is a single object with multiple `value` properties. This feature will be sunset
-      // as it does not allow to use sort order on Feature objects.
-      if (!Array.isArray(this.value) || this.value.length !== feature.value.length) {
-        return false
-      }
-      let equal = this.type === feature.type && LanguageModelFactory.compareLanguages(this.languageID, feature.languageID)
-      equal = equal && this.value.every(function (element, index) {
-        return element === feature.value[index]
-      })
-      return equal
-    } else {
-      return LanguageModelFactory.compareLanguages(this.languageID, feature.languageID) && this.type === feature.type && this.value === feature.value
-    }
-  }
-
-  /**
-   * examine the feature for a specific value
-   * @param {string} value
-   * @returns {boolean} true if the value is included in the feature's values
-   */
-  hasValue (value) {
-    if (Array.isArray(this.value)) {
-      return this.value.includes(value)
-    } else {
-      return this.value === value
-    }
-  }
-
-  /**
-   * string representation of a feature
-   * @return {string}
-   */
-  toString () {
-    if (Array.isArray(this.value)) {
-      return this.value.join(',')
-    } else {
-      return this.value
-    }
-  }
-
-  /**
-   * a locale-specific abbreviation for a feature's values
-   * @return {string}
-   */
-  toLocaleStringAbbr (lang = 'en') {
-    if (Array.isArray(this.value)) {
-      return this.value.map((v) => this.toLocaleStringAbbr(v, lang))
-    } else {
-      return i18n[lang][this.value].abbr
-    }
-  }
-}
-// Should have no spaces in values in order to be used in HTML templates
-Feature.types = {
-  word: 'word',
-  part: 'part of speech', // Part of speech
-  number: 'number',
-  'case': 'case',
-  grmCase: 'case', // A synonym of `case`
-  declension: 'declension',
-  gender: 'gender',
-  type: 'type',
-  'class': 'class',
-  grmClass: 'class', // A synonym of `class`
-  conjugation: 'conjugation',
-  comparison: 'comparison',
-  tense: 'tense',
-  voice: 'voice',
-  mood: 'mood',
-  person: 'person',
-  frequency: 'frequency', // How frequent this word is
-  meaning: 'meaning', // Meaning of a word
-  source: 'source', // Source of word definition
-  footnote: 'footnote', // A footnote for a word's ending
-  dialect: 'dialect', // a dialect identifier
-  note: 'note', // a general note
-  pronunciation: 'pronunciation',
-  age: 'age',
-  area: 'area',
-  geo: 'geo', // geographical data
-  kind: 'kind', // verb kind information
-  derivtype: 'derivtype',
-  stemtype: 'stemtype',
-  morph: 'morph', // general morphological information
-  var: 'var', // variance?
-  isAllowed (value) {
-    let v = `${value}`
-    return Object.values(this).includes(v)
-  }
-}
-
-/**
  * Lemma, a canonical form of a word.
  */
 class Lemma {
@@ -2360,7 +2360,7 @@ class Lemma {
    * Sets a grammatical feature for a lemma. Some features can have multiple values, In this case
    * an array of Feature objects will be provided.
    * Values are taken from features and stored in a 'feature.type' property as an array of values.
-   * @param {Feature | Feature[]} data
+   * @param {GrmFeature | GrmFeature[]} data
    */
   set feature (data) {
     if (!data) {
@@ -2373,7 +2373,7 @@ class Lemma {
     let type = data[0].type
     this.features[type] = []
     for (let element of data) {
-      if (!(element instanceof Feature)) {
+      if (!(element instanceof GrmFeature)) {
         throw new Error('feature data must be a Feature object.')
       }
 
@@ -2510,7 +2510,7 @@ class Inflection {
      * Sets a grammatical feature in an inflection. Some features can have multiple values, In this case
      * an array of Feature objects will be provided.
      * Values are taken from features and stored in a 'feature.type' property as an array of values.
-     * @param {Feature | Feature[]} data
+     * @param {GrmFeature | GrmFeature[]} data
      */
   set feature (data) {
     if (!data) {
@@ -2523,7 +2523,7 @@ class Inflection {
     let type = data[0].type
     this[type] = []
     for (let element of data) {
-      if (!(element instanceof Feature)) {
+      if (!(element instanceof GrmFeature)) {
         throw new Error('Inflection feature data must be a Feature object.')
       }
 
@@ -2711,6 +2711,7 @@ class Homonym {
      * @returns {string} A language code, as defined in the `languages` object.
      */
   get language () {
+    console.warn(`Please use languageID instead`)
     return LanguageModelFactory.getLanguageCodeFromId(this.languageID)
   }
 
@@ -2824,7 +2825,7 @@ class ImportData {
     }
     // may be overridden by specifc engine use via setLexemeFilter - default assumes we will have a part of speech
     this.reportLexeme = function (lexeme) {
-      return lexeme.lemma.features[Feature.types.part]
+      return lexeme.lemma.features[GrmFeature.types.part]
     }
   }
 
@@ -2920,7 +2921,7 @@ class ImportData {
       }
     }
     for (let value of values) {
-      let features = this[Feature.types[featureName]].get(
+      let features = this[GrmFeature.types[featureName]].get(
         value, inputElem[inputName].order, allowUnknownValues)
       if (Array.isArray(features)) {
         mapped.push(...features)
@@ -2935,7 +2936,7 @@ class ImportData {
 }
 
 let data = new ImportData(LatinLanguageModel, 'whitakerLat')
-let types = Feature.types
+let types = GrmFeature.types
 
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
@@ -2948,7 +2949,7 @@ Types and values that are unknown (undefined) will be skipped during parsing.
 // TODO  - per inflections.xsd
 // Whitakers Words uses packon and tackon in POFS, not sure how
 
-data.addFeature(Feature.types.gender).importer
+data.addFeature(GrmFeature.types.gender).importer
   .map('common',
     [ data.model.features[types.gender][constants.GEND_MASCULINE],
       data.model.features[types.gender][constants.GEND_FEMININE]
@@ -2959,7 +2960,7 @@ data.addFeature(Feature.types.gender).importer
       data.model.features[types.gender][constants.GEND_NEUTER]
     ])
 
-data.addFeature(Feature.types.tense).importer
+data.addFeature(GrmFeature.types.tense).importer
   .map('future_perfect', data.model.features[types.tense][constants.TENSE_FUTURE_PERFECT])
 
 data.setLemmaParser(function (lemma) {
@@ -2983,7 +2984,7 @@ data.setLemmaParser(function (lemma) {
 })
 
 let data$1 = new ImportData(GreekLanguageModel, 'morpheusgrc')
-let types$1 = Feature.types
+let types$1 = GrmFeature.types
 
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
@@ -2993,28 +2994,28 @@ data.addFeature(typeName).add(providerValueName, LibValueName);
 Types and values that are unknown (undefined) will be skipped during parsing.
  */
 
-data$1.addFeature(Feature.types.gender).importer
+data$1.addFeature(GrmFeature.types.gender).importer
   .map('masculine feminine',
     [ data$1.model.features[types$1.gender][constants.GEND_MASCULINE],
       data$1.model.features[types$1.gender][constants.GEND_FEMININE]
     ])
 
-data$1.addFeature(Feature.types.declension).importer
+data$1.addFeature(GrmFeature.types.declension).importer
   .map('1st & 2nd',
     [ data$1.model.features[types$1.declension][constants.ORD_1ST],
       data$1.model.features[types$1.declension][constants.ORD_2ND]
     ])
 
 let data$2 = new ImportData(ArabicLanguageModel, 'aramorph')
-let types$2 = Feature.types
+let types$2 = GrmFeature.types
 
-data$2.addFeature(Feature.types.part).importer
+data$2.addFeature(GrmFeature.types.part).importer
   .map('proper noun', [data$2.model.features[types$2.part][constants.POFS_NOUN]])
 
 let data$3 = new ImportData(PersianLanguageModel, 'hazm')
-let types$3 = Feature.types
+let types$3 = GrmFeature.types
 
-data$3.addFeature(Feature.types.part).importer
+data$3.addFeature(GrmFeature.types.part).importer
   .map('proper noun', [data$3.model.features[types$3.part][constants.POFS_NOUN]])
 
 // hazm allow all lemmas in without respect features as all we use it for is lemmatizing
@@ -3252,28 +3253,28 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           mappingData.mapFeature(inflection, inflectionJSON, 'morph', 'morph', this.config.allowUnknownValues)
         }
         // we only use the inflection if it tells us something the dictionary details do not
-        if (inflection[Feature.types.grmCase] ||
-          inflection[Feature.types.tense] ||
-          inflection[Feature.types.mood] ||
-          inflection[Feature.types.voice] ||
-          inflection[Feature.types.person] ||
-          inflection[Feature.types.comparison] ||
-          inflection[Feature.types.stemtype] ||
-          inflection[Feature.types.derivtype] ||
-          inflection[Feature.types.dialect] ||
-          inflection[Feature.types.morph] ||
-          inflection[Feature.types.example]) {
+        if (inflection[GrmFeature.types.grmCase] ||
+          inflection[GrmFeature.types.tense] ||
+          inflection[GrmFeature.types.mood] ||
+          inflection[GrmFeature.types.voice] ||
+          inflection[GrmFeature.types.person] ||
+          inflection[GrmFeature.types.comparison] ||
+          inflection[GrmFeature.types.stemtype] ||
+          inflection[GrmFeature.types.derivtype] ||
+          inflection[GrmFeature.types.dialect] ||
+          inflection[GrmFeature.types.morph] ||
+          inflection[GrmFeature.types.example]) {
           inflections.push(inflection)
         }
         // inflection can provide lemma decl, pofs, conj
         for (let lemma of lemmas) {
-          if (!lemma.features[Feature.types.declension]) {
+          if (!lemma.features[GrmFeature.types.declension]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'decl', 'declension', this.config.allowUnknownValues)
           }
-          if (!lemma.features[Feature.types.part]) {
+          if (!lemma.features[GrmFeature.types.part]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues)
           }
-          if (!lemma.features[Feature.types.conjugation]) {
+          if (!lemma.features[GrmFeature.types.conjugation]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues)
           }
         }
