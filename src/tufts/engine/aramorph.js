@@ -1,10 +1,10 @@
 import ImportData from '../lib'
 import * as Models from 'alpheios-data-models'
 
-let data = new ImportData(new Models.ArabicLanguageModel(), 'aramorph')
+let data = new ImportData(Models.ArabicLanguageModel, 'aramorph')
 let types = Models.Feature.types
 
 data.addFeature(Models.Feature.types.part).importer
-    .map('proper noun', [data.language.features[types.part][Models.Constants.POFS_NOUN]])
+  .map('proper noun', [data.model.features[types.part][Models.Constants.POFS_NOUN]])
 
 export default data

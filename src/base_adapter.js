@@ -10,7 +10,7 @@ class BaseAdapter {
    * @returns {string} the url for the request
    */
   prepareRequestUrl (lang, word) {
-      /** must be overridden in the adapter implementation class **/
+    /** must be overridden in the adapter implementation class **/
     return null
   }
 
@@ -38,21 +38,21 @@ class BaseAdapter {
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
-            function (response) {
-              try {
-                if (response.ok) {
-                  let json = response.json()
-                  resolve(json)
-                } else {
-                  reject(response.statusText)
-                }
-              } catch (error) {
-                reject(error)
+          function (response) {
+            try {
+              if (response.ok) {
+                let json = response.json()
+                resolve(json)
+              } else {
+                reject(response.statusText)
               }
+            } catch (error) {
+              reject(error)
             }
-          ).catch((error) => {
-            reject(error)
           }
+        ).catch((error) => {
+          reject(error)
+        }
         )
       } else {
         reject(new Error(`Unable to prepare parser request url for ${lang}`))

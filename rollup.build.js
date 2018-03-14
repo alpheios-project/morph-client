@@ -9,9 +9,9 @@ const defaultPlugins = [
   resolve({
     // use "module" field for ES6 module if possible
     module: true, // Default: true
-    jsnext: true,  // Default: false
-    main: true,  // Default: true
-    browser: true  // Default: false
+    jsnext: true, // Default: false
+    main: true, // Default: true
+    browser: true // Default: false
   })
 ]
 

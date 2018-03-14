@@ -1,4 +1,5 @@
 /* eslint-env jest */
+import { Constants } from 'alpheios-data-models'
 import Whitakers from '../../src/tufts/engine/whitakers'
 
 describe('Whitakers', () => {
@@ -6,7 +7,7 @@ describe('Whitakers', () => {
     let parse = 'sumo, sumere, sumsi, sumtus'
     let lemma = Whitakers.parseLemma(parse)
     expect(lemma.word).toEqual('sumo')
-    expect(lemma.language).toEqual('lat')
+    expect(lemma.languageID).toEqual(Constants.LANG_LATIN)
     expect(lemma.principalParts).toEqual(['sumo', 'sumere', 'sumsi', 'sumtus'])
   })
 

@@ -49,7 +49,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         let json = JSON.parse(wordData)
         resolve(json)
       } catch (error) {
-                // Word is not found in test data
+        // Word is not found in test data
         reject(error)
       }
     })
@@ -66,10 +66,10 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
     let lexemes = []
     let annotationBody = jsonObj.RDF.Annotation.Body
     if (!Array.isArray(annotationBody)) {
-            /*
-            If only one lexeme is returned, Annotation Body will not be an array but rather a single object.
-            Let's convert it to an array so we can work with it in the same way no matter what format it is.
-             */
+      /*
+      If only one lexeme is returned, Annotation Body will not be an array but rather a single object.
+      Let's convert it to an array so we can work with it in the same way no matter what format it is.
+      */
       if (annotationBody) {
         annotationBody = [annotationBody]
       } else {
@@ -177,9 +177,9 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
       }
       let inflections = []
       for (let inflectionJSON of inflectionsJSON) {
-        let inflection = new Models.Inflection(inflectionJSON.term.stem.$, mappingData.language.toCode())
+        let inflection = new Models.Inflection(inflectionJSON.term.stem.$, mappingData.model.languageID)
         if (inflectionJSON.term.suff) {
-                    // Set suffix if provided by a morphological analyzer
+          // Set suffix if provided by a morphological analyzer
           inflection.suffix = inflectionJSON.term.suff.$
         }
 
@@ -259,7 +259,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
       let homonym = this.transform(jsonObj, word)
       return homonym
     } else {
-        // No data found for this word
+      // No data found for this word
       return undefined
     }
   }
