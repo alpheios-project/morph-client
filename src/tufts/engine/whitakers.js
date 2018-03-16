@@ -2,7 +2,7 @@ import ImportData from '../lib'
 import * as Models from 'alpheios-data-models'
 
 let data = new ImportData(Models.LatinLanguageModel, 'whitakerLat')
-let types = Models.GrmFeature.types
+let types = Models.Feature.types
 
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
@@ -15,7 +15,7 @@ Types and values that are unknown (undefined) will be skipped during parsing.
 // TODO  - per inflections.xsd
 // Whitakers Words uses packon and tackon in POFS, not sure how
 
-data.addFeature(Models.GrmFeature.types.gender).importer
+data.addFeature(Models.Feature.types.gender).importer
   .map('common',
     [ data.model.features[types.gender][Models.Constants.GEND_MASCULINE],
       data.model.features[types.gender][Models.Constants.GEND_FEMININE]
@@ -26,7 +26,7 @@ data.addFeature(Models.GrmFeature.types.gender).importer
       data.model.features[types.gender][Models.Constants.GEND_NEUTER]
     ])
 
-data.addFeature(Models.GrmFeature.types.tense).importer
+data.addFeature(Models.Feature.types.tense).importer
   .map('future_perfect', data.model.features[types.tense][Models.Constants.TENSE_FUTURE_PERFECT])
 
 data.setLemmaParser(function (lemma) {

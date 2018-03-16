@@ -39,7 +39,7 @@ class ImportData {
     }
     // may be overridden by specifc engine use via setLexemeFilter - default assumes we will have a part of speech
     this.reportLexeme = function (lexeme) {
-      return lexeme.lemma.features[Models.GrmFeature.types.part]
+      return lexeme.lemma.features[Models.Feature.types.part]
     }
   }
 
@@ -135,7 +135,7 @@ class ImportData {
       }
     }
     for (let value of values) {
-      let features = this[Models.GrmFeature.types[featureName]].get(
+      let features = this[Models.Feature.types[featureName]].get(
         value, inputElem[inputName].order, allowUnknownValues)
       if (Array.isArray(features)) {
         mapped.push(...features)
