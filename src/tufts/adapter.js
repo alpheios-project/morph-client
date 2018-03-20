@@ -161,11 +161,13 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
               new Models.Definition(meaning.$, lang, 'text/plain', lemmas[index].word)))
           }
         } else {
-          for (let meaning of meanings) {
+          // Changed to prevent some weird "Array Iterator.prototype.next called on incompatible receiver [object Unknown]" error
+          let sDefs = meanings.map(meaning => {
             let lang = meaning.lang ? meaning.lang : 'eng'
-            shortdefs.push(Models.ResourceProvider.getProxy(provider,
-              new Models.Definition(meaning.$, lang, 'text/plain', lemma.word)))
-          }
+            return Models.ResourceProvider.getProxy(provider,
+              new Models.Definition(meaning.$, lang, 'text/plain', lemma.word))
+          })
+          shortdefs.push(...sDefs)
         }
         let lexmodel = new Models.Lexeme(lemma, [])
 

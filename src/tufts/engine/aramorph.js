@@ -5,6 +5,6 @@ let data = new ImportData(Models.ArabicLanguageModel, 'aramorph')
 let types = Models.Feature.types
 
 data.addFeature(Models.Feature.types.part).importer
-  .map('proper noun', [data.model.features[types.part][Models.Constants.POFS_NOUN]])
+  .map('proper noun', Models.Constants.POFS_NOUN)
 
 export default data

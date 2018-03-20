@@ -13,15 +13,9 @@ Types and values that are unknown (undefined) will be skipped during parsing.
  */
 
 data.addFeature(Models.Feature.types.gender).importer
-  .map('masculine feminine',
-    [ data.model.features[types.gender][Models.Constants.GEND_MASCULINE],
-      data.model.features[types.gender][Models.Constants.GEND_FEMININE]
-    ])
+  .map('masculine feminine', [Models.Constants.GEND_MASCULINE, Models.Constants.GEND_FEMININE])
 
 data.addFeature(Models.Feature.types.declension).importer
-  .map('1st & 2nd',
-    [ data.model.features[types.declension][Models.Constants.ORD_1ST],
-      data.model.features[types.declension][Models.Constants.ORD_2ND]
-    ])
+  .map('1st & 2nd', [Models.Constants.ORD_1ST, Models.Constants.ORD_2ND])
 
 export default data
