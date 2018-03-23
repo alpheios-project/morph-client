@@ -27,31 +27,33 @@ describe('TuftsAdapter object', () => {
 
   test('default values are returned', () => {
     let adapter = new TuftsAdapter()
-    let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.grmCase].get('nominative')
-    let def = new Models.GrmFeature('nominative', Models.GrmFeature.types.grmCase, 'grc')
+    let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.grmCase].get('nominative')
+    let def = new Models.Feature(Models.Feature.types.grmCase, 'nominative', Models.Constants.LANG_GREEK)
     expect(retrieved).toEqual(def)
   })
 
   test('mapped values are returned', () => {
     let adapter = new TuftsAdapter()
-    let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.gender].get('masculine feminine')
-    let def = [ new Models.GrmFeature(Models.Constants.GEND_MASCULINE, Models.GrmFeature.types.gender, 'grc'),
-      new Models.GrmFeature(Models.Constants.GEND_FEMININE, Models.GrmFeature.types.gender, 'grc')
-    ]
+    let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.gender].get('masculine feminine')
+    let def = new Models.Feature(
+      Models.Feature.types.gender,
+      [[Models.Constants.GEND_FEMININE, 1], [Models.Constants.GEND_MASCULINE, 1]],
+      Models.Constants.LANG_GREEK
+    )
     expect(retrieved).toEqual(def)
   })
 
   test('unmapped values with no defaults throws an error if unknown values not allowed', () => {
     let adapter = new TuftsAdapter({'allowUnknownValues': false})
     expect(() => {
-      let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.person].get('1') // eslint-disable-line no-unused-vars
+      let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.person].get('1') // eslint-disable-line no-unused-vars
     }).toThrowError(/unknown value/i)
   })
 
   test('unmapped values with no defaults still works if unknown values allowed', () => {
     let adapter = new TuftsAdapter()
-    let retrieved = adapter.getEngineLanguageMap('grc')[Models.GrmFeature.types.person].get('1', 1, adapter.config.allowUnknownValues) // eslint-disable-line no-unused-vars
-    let def = new Models.GrmFeature('1', Models.GrmFeature.types.person, 'grc')
+    let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.person].get('1', 1, adapter.config.allowUnknownValues) // eslint-disable-line no-unused-vars
+    let def = new Models.Feature(Models.Feature.types.person, '1', Models.Constants.LANG_GREEK)
 
     expect(retrieved).toEqual(def)
   })
@@ -64,8 +66,8 @@ describe('TuftsAdapter object', () => {
     let nounMare = homonym.lexemes.filter(l => l.lemma.word === 'mare')
     expect(nounMare.length).toEqual(1)
     expect(nounMare[0].meaning).toBeTruthy()
-    expect(nounMare[0].lemma.features.declension[0].value).toEqual('3rd')
-    expect(nounMare[0].lemma.features['part of speech'][0].value).toEqual('noun')
+    expect(nounMare[0].lemma.features.declension.value).toEqual('3rd')
+    expect(nounMare[0].lemma.features['part of speech'].value).toEqual('noun')
     expect(nounMare[0].provider.uri).toEqual('org.perseus:tools:morpheus.v1')
     expect(nounMare[0].provider.toString()).toMatch(/Morpheus/)
     let nounMarum = homonym.lexemes.filter(l => l.lemma.word === 'marum')
@@ -74,12 +76,8 @@ describe('TuftsAdapter object', () => {
     expect(adjMas.length).toEqual(1)
     expect(nounMare[0].inflections.length).toEqual(4)
     let vocative = 0
-    for (let c of nounMare[0].inflections.map(i => i[Models.GrmFeature.types.grmCase])) {
-      for (let f of c) {
-        if (f.hasValue('vocative')) {
-          vocative++
-        }
-      }
+    for (let c of nounMare[0].inflections.map(i => i[Models.Feature.types.grmCase])) {
+      if (c.values.includes('vocative')) { vocative++ }
     }
     expect(vocative).toEqual(1)
   })
@@ -91,9 +89,9 @@ describe('TuftsAdapter object', () => {
     expect(homonym.lexemes.length).toEqual(2)
     let word = homonym.lexemes.filter(l => l.lemma.word === 'cupido')
     expect(word.length).toEqual(1)
-    expect(word[0].lemma.features.frequency[0].value).toEqual('frequent')
-    expect(word[0].lemma.features.frequency[0].sortOrder).toEqual(5)
-    expect(word[0].lemma.features.source[0].value).toEqual('Ox.Lat.Dict.')
+    expect(word[0].lemma.features.frequency.value).toEqual('frequent')
+    expect(word[0].lemma.features.frequency.items[0].sortOrder).toEqual(5)
+    expect(word[0].lemma.features.source.value).toEqual('Ox.Lat.Dict.')
   })
 
   test('parses dialect stemtype derivtype morph', () => {
@@ -102,10 +100,10 @@ describe('TuftsAdapter object', () => {
     let homonym = adapter.transform(word)
     expect(homonym.lexemes.length).toEqual(1)
     expect(homonym.lexemes[0].inflections.length).toEqual(2)
-    expect(homonym.lexemes[0].inflections[0].dialect[0].value).toEqual('Attic')
-    expect(homonym.lexemes[0].inflections[0].stemtype[0].value).toEqual('aw_fut')
-    expect(homonym.lexemes[0].inflections[0].derivtype[0].value).toEqual('a_stem')
-    expect(homonym.lexemes[0].inflections[0].morph[0].value).toEqual('contr')
+    expect(homonym.lexemes[0].inflections[0].dialect.value).toEqual('Attic')
+    expect(homonym.lexemes[0].inflections[0].stemtype.value).toEqual('aw_fut')
+    expect(homonym.lexemes[0].inflections[0].derivtype.value).toEqual('a_stem')
+    expect(homonym.lexemes[0].inflections[0].morph.value).toEqual('contr')
   })
 
   test('multiple dict and mean entries', () => {
@@ -151,6 +149,6 @@ describe('TuftsAdapter object', () => {
     let data = require('../../src/tufts/engine/data/multival.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(5)
-    expect(homonym.lexemes[3].inflections[0].morph.length).toEqual(2)
+    expect(homonym.lexemes[3].inflections[0].morph.values.length).toEqual(2)
   })
 })

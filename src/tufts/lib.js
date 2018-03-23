@@ -77,11 +77,7 @@ class ImportData {
       } else {
         let tempValue = this.importer.get(providerValue)
         if (Array.isArray(tempValue)) {
-          console.log(`Multiple values`)
-          mappedValue = []
-          for (let feature of tempValue) {
-            mappedValue.push(model.features[featureName].get(feature.value, sortOrder))
-          }
+          mappedValue = model.typeFeature(featureName).createFeatures(tempValue.map(v => [v, sortOrder]))
         } else {
           mappedValue = model.typeFeature(featureName).createFeature(tempValue.value, sortOrder)
         }

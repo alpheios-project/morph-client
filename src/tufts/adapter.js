@@ -180,6 +180,9 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
       let inflections = []
       for (let inflectionJSON of inflectionsJSON) {
         let inflection = new Models.Inflection(inflectionJSON.term.stem.$, mappingData.model.languageID)
+        if (targetWord) {
+          inflection.addFeature(new Models.Feature(Models.Feature.types.fullForm, targetWord, mappingData.model.languageID))
+        }
         if (inflectionJSON.term.suff) {
           // Set suffix if provided by a morphological analyzer
           inflection.suffix = inflectionJSON.term.suff.$
