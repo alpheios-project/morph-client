@@ -588,16 +588,18 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         }
         // inflection can provide lemma decl, pofs, conj
         for (let lemma of lemmas) {
-          // only take declension from inflection if lemma has a part of speech and its the same as the inflection
-          if (!lemma.features[Feature.types.declension] && inflection[Feature.types.part] === lemma.features[Feature.types.part]) {
+          if (!lemma.features[Feature.types.part]) {
+            mappingData.mapFeature(lemma, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues);
+          }
+          // only take declension from inflection if lemma has no part of speech or its the same as the inflection
+          if (!lemma.features[Feature.types.declension] &&
+            (!lemma.features[Feature.types.part] || lemma.features[Feature.types.part].isEqual(inflection[Feature.types.part]))) {
             mappingData.mapFeature(lemma, inflectionJSON, 'decl', 'declension', this.config.allowUnknownValues);
           }
           // only take conjugation from inflection if lemma has a part of speech and its the same as the inflection
-          if (!lemma.features[Feature.types.conjugation] && inflection[Feature.types.part] === lemma.features[Feature.types.part]) {
+          if (!lemma.features[Feature.types.conjugation] &&
+            (!lemma.features[Feature.types.part] || lemma.features[Feature.types.part].isEqual(inflection[Feature.types.part]))) {
             mappingData.mapFeature(lemma, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues);
-          }
-          if (!lemma.features[Feature.types.part]) {
-            mappingData.mapFeature(lemma, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues);
           }
         }
       }

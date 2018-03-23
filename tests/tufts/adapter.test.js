@@ -129,6 +129,8 @@ describe('TuftsAdapter object', () => {
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(6)
     expect(homonym.lexemes[5].lemma.word).toEqual('sui')
+    expect(homonym.lexemes[5].lemma.features['part of speech'].value).toEqual('pronoun')
+    expect(homonym.lexemes[5].lemma.features['declension'].value).toEqual('5th')
   })
 
   test('lemma filter', () => {
