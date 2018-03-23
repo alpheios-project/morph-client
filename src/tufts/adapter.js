@@ -92,20 +92,6 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         inflectionsJSON = [inflectionsJSON]
       }
       let lemmaElements
-      if ((lexeme.rest.entry.dict && lexeme.rest.entry.dict.hdwd) || (Array.isArray(lexeme.rest.entry.dict) && lexeme.rest.entry.dict[0].hdwd)) {
-        if (Array.isArray(lexeme.rest.entry.dict)) {
-          lemmaElements = lexeme.rest.entry.dict
-        } else {
-          lemmaElements = [lexeme.rest.entry.dict]
-        }
-      } else if (inflectionsJSON.length > 0 && inflectionsJSON[0].term) {
-        lemmaElements = [inflectionsJSON[0].term]
-      }
-      // in rare cases (e.g. conditum in Whitakers) multiple dict entries
-      // exist - always use the lemma and language from the first
-      let language = lemmaElements[0].hdwd ? lemmaElements[0].hdwd.lang : lemmaElements[0].lang
-      // Get importer based on the language
-      let mappingData = this.getEngineLanguageMap(language)
       let features = [
         ['pofs', 'part'],
         ['case', 'grmCase'],
@@ -121,6 +107,25 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         ['src', 'source'],
         ['kind', 'kind']
       ]
+      if (lexeme.rest.entry.dict) {
+        if (Array.isArray(lexeme.rest.entry.dict)) {
+          lemmaElements = lexeme.rest.entry.dict
+        } else {
+          if (!lexeme.rest.entry.dict.hdwd && inflectionsJSON[0].term) {
+            lexeme.rest.entry.dict.hdwd = {}
+            lexeme.rest.entry.dict.hdwd.lang = inflectionsJSON[0].term.lang
+            lexeme.rest.entry.dict.hdwd.$ = inflectionsJSON[0].term.stem.$ + inflectionsJSON[0].term.suff.$
+          }
+          lemmaElements = [lexeme.rest.entry.dict]
+        }
+      } else if (inflectionsJSON.length > 0 && inflectionsJSON[0].term) {
+        lemmaElements = [ inflectionsJSON[0].term ]
+      }
+      // in rare cases (e.g. conditum in Whitakers) multiple dict entries
+      // exist - always use the lemma and language from the first
+      let language = lemmaElements[0].hdwd ? lemmaElements[0].hdwd.lang : lemmaElements[0].lang
+      // Get importer based on the language
+      let mappingData = this.getEngineLanguageMap(language)
       let lemmas = []
       let lexemeSet = []
       for (let entry of lemmaElements.entries()) {
@@ -130,14 +135,6 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         let lemmaText
         if (elem.hdwd) {
           lemmaText = elem.hdwd.$
-        } else {
-          // term
-          if (elem.stem) {
-            lemmaText = elem.stem.$
-          }
-          if (elem.suff) {
-            lemmaText += elem.suff.$
-          }
         }
         if (!lemmaText || !language) {
           continue

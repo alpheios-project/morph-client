@@ -131,6 +131,7 @@ describe('TuftsAdapter object', () => {
     expect(homonym.lexemes[5].lemma.word).toEqual('sui')
     expect(homonym.lexemes[5].lemma.features['part of speech'].value).toEqual('pronoun')
     expect(homonym.lexemes[5].lemma.features['declension'].value).toEqual('5th')
+    expect(homonym.lexemes[5].lemma.features['frequency'].value).toEqual('very frequent')
   })
 
   test('lemma filter', () => {
