@@ -118,7 +118,8 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         ['freq', 'frequency'],
         ['note', 'note'],
         ['pron', 'pronunciation'],
-        ['src', 'source']
+        ['src', 'source'],
+        ['kind', 'kind']
       ]
       let lemmas = []
       let lexemeSet = []
