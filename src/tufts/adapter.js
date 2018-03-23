@@ -231,14 +231,16 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         }
         // inflection can provide lemma decl, pofs, conj
         for (let lemma of lemmas) {
-          if (!lemma.features[Models.Feature.types.declension]) {
+          // only take declension from inflection if lemma has a part of speech and its the same as the inflection
+          if (!lemma.features[Models.Feature.types.declension] && inflection[Models.Feature.types.part] === lemma.features[Models.Feature.types.part]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'decl', 'declension', this.config.allowUnknownValues)
+          }
+          // only take conjugation from inflection if lemma has a part of speech and its the same as the inflection
+          if (!lemma.features[Models.Feature.types.conjugation] && inflection[Models.Feature.types.part] === lemma.features[Models.Feature.types.part]) {
+            mappingData.mapFeature(lemma, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues)
           }
           if (!lemma.features[Models.Feature.types.part]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues)
-          }
-          if (!lemma.features[Models.Feature.types.conjugation]) {
-            mappingData.mapFeature(lemma, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues)
           }
         }
       }

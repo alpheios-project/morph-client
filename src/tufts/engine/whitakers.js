@@ -15,8 +15,8 @@ Types and values that are unknown (undefined) will be skipped during parsing.
 // Whitakers Words uses packon and tackon in POFS, not sure how
 
 data.addFeature(Models.Feature.types.gender).importer
-  .map('common', [Models.Constants.GEND_MASCULINE, Models.Constants.GEND_FEMININE])
-  .map('all', [Models.Constants.GEND_MASCULINE, Models.Constants.GEND_FEMININE, Models.Constants.GEND_NEUTER])
+  .map('common', [[Models.Constants.GEND_MASCULINE, 1], [Models.Constants.GEND_FEMININE, 2]])
+  .map('all', [[Models.Constants.GEND_MASCULINE, 1], [Models.Constants.GEND_FEMININE, 2], [Models.Constants.GEND_NEUTER, 3]])
 
 data.addFeature(Models.Feature.types.tense).importer
   .map('future_perfect', Models.Constants.TENSE_FUTURE_PERFECT)

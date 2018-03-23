@@ -77,9 +77,9 @@ class ImportData {
       } else {
         let tempValue = this.importer.get(providerValue)
         if (Array.isArray(tempValue)) {
-          mappedValue = model.typeFeature(featureName).createFeatures(tempValue.map(v => [v, sortOrder]))
+          mappedValue = model.typeFeature(featureName).createFeatures(tempValue, sortOrder)
         } else {
-          mappedValue = model.typeFeature(featureName).createFeature(tempValue.value, sortOrder)
+          mappedValue = model.typeFeature(featureName).createFeature(tempValue, sortOrder)
         }
       }
       return mappedValue
@@ -94,10 +94,13 @@ class ImportData {
       let values = [] // Converts values from `data` into `values` array
       for (const item of data) {
         if (this.importer.has(item.providerValue)) {
-          // Returns either a single string value or an array of strings
           let value = this.importer.get(item.providerValue)
-          if (!Array.isArray(value)) { value = [value] }
-          values.push(...value.map(v => [v, item.sortOrder]))
+          if (Array.isArray(value)) {
+            // if the import returns an array, it should already have the sortOrder
+            values = value
+          } else {
+            values = [value, item.sortOrder]
+          }
         } else if (model.typeFeature(featureName).hasValue(item.providerValue) ||
           model.typeFeature(featureName).valuesUnrestricted) {
           values.push([item.providerValue, item.sortOrder])
