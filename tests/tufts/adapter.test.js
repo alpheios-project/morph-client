@@ -150,4 +150,12 @@ describe('TuftsAdapter object', () => {
     expect(homonym.lexemes.length).toEqual(5)
     expect(homonym.lexemes[3].inflections[0].morph.values.length).toEqual(2)
   })
+
+  test('lemma declension feature not set if pofs differs', () => {
+    let adapter = new TuftsAdapter()
+    let data = require('../../src/tufts/engine/data/decl_lemma_mismatch.json')
+    let homonym = adapter.transform(data)
+    expect(homonym.lexemes[0].lemma.features['part of speech'].value).toEqual('pronoun')
+    expect(homonym.lexemes[0].lemma.features.declension).toBeFalsy()
+  })
 })
