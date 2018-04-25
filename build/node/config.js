@@ -6,9 +6,6 @@ module.exports = {
   webpack: {
     common: {
       resolve: {
-        alias: {
-          'alpheios-data-models': path.join(projectRoot, 'node_modules/alpheios-data-models/dist/alpheios-data-models.js')
-        },
         mainFields: ['moduleExternal', 'module', 'main']
       },
       externals: {
@@ -49,7 +46,12 @@ module.exports = {
             })
           ]
         },
-        plugins: []
+        plugins: [],
+        resolve: {
+          alias: {
+            'alpheios-data-models': path.join(projectRoot, 'node_modules/alpheios-data-models/dist/alpheios-data-models.min.js')
+          }
+        }
       }
     ],
     devTasks: [
@@ -104,7 +106,12 @@ module.exports = {
             }
           ]
         },
-        plugins: []
+        plugins: [],
+        resolve: {
+          alias: {
+            'alpheios-data-models': path.join(projectRoot, 'node_modules/alpheios-data-models/dist/alpheios-data-models.min.js')
+          }
+        }
       }
     ]
   }
