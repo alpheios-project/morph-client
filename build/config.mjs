@@ -10,7 +10,7 @@ const webpack = {
     output: {filename: 'alpheios-morph-client.min.js'}
   },
   development: {
-    output: {filename: 'alpheios-moprh-client.js'}
+    output: {filename: 'alpheios-morph-client.js'}
   }
 }
 
