@@ -2,11 +2,12 @@
   "name": "alpheios-morph-client",
   "version": "1.1.1",
   "description": "Alpheios Morphology Client Library",
-  "main": "dist/alpheios-morph-client.standalone.js",
-  "moduleExternal": "dist/alpheios-morph-client.module-external.js",
+  "main": "dist/alpheios-morph-client.min.js",
   "scripts": {
-    "test": "standard --fix && jest",
-    "build": "node ./rollup.build.js",
+    "test": "standard --fix && jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "build": "standard --fix && node --experimental-modules ./node_modules/alpheios-node-build/dist/build.mjs all all vue",
+    "build-prod": "standard --fix && node --experimental-modules ./node_modules/alpheios-node-build/dist/build.mjs all production vue",
+    "build-dev": "standard --fix && node --experimental-modules ./node_modules/alpheios-node-build/dist/build.mjs all development vue",
     "lint": "standard --fix"
   },
   "repository": {
@@ -21,22 +22,29 @@
   "homepage": "https://github.com/alpheios-project/morph-client#readme",
   "devDependencies": {
     "alpheios-data-models": "github:alpheios-project/data-models",
+    "alpheios-node-build": "github:alpheios-project/node-build",
     "babel-jest": "^21.2.0",
     "babel-preset-env": "^1.6.1",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.19.0",
+    "eslint-plugin-import": "^2.11.0",
+    "fs": "0.0.1-security",
     "jest": "^22.4.3",
     "jest-fetch-mock": "1.3.3",
-    "rollup": "^0.47.6",
-    "rollup-plugin-commonjs": "^8.4.1",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-replace": "^2.0.0",
-    "rollup-plugin-string": "^2.0.2",
+    "parallel-webpack": "^2.3.0",
+    "source-map-loader": "^0.2.3",
     "standard": "^11.0.1"
   },
+  "dependencies": {},
   "jest": {
     "verbose": true,
     "transformIgnorePatterns": [
       "node_modules/?!(alpheios-data-models)"
     ]
   },
-  "dependencies": {}
+  "standard": {
+    "ignore": [
+      "**/dist"
+    ]
+  }
 }
