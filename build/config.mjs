@@ -2,7 +2,7 @@ const webpack = {
   common: {
     entry: './driver.js',
     externals: {
-      'alpheios-morph-client': 'alpheios-morph-client'
+      'alpheios-data-models': 'alpheios-data-models'
     }
   },
 
