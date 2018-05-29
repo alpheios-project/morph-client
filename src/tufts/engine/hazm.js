@@ -3,9 +3,6 @@ import * as Models from 'alpheios-data-models'
 
 let data = new ImportData(Models.PersianLanguageModel, 'hazm')
 
-data.addFeature(Models.Feature.types.part).importer
-  .map('proper noun', Models.Constants.POFS_NOUN)
-
 // hazm allow all lemmas in without respect features as all we use it for is lemmatizing
 data.setLexemeFilter(function (lexeme) { return Boolean(lexeme.lemma.word) })
 

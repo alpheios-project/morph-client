@@ -534,9 +534,6 @@ __webpack_require__.r(__webpack_exports__);
 
 let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["ArabicLanguageModel"], 'aramorph')
 
-data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.part).importer
-  .map('proper noun', alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].POFS_NOUN)
-
 /* harmony default export */ __webpack_exports__["default"] = (data);
 
 
@@ -646,9 +643,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["PersianLanguageModel"], 'hazm')
-
-data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.part).importer
-  .map('proper noun', alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].POFS_NOUN)
 
 // hazm allow all lemmas in without respect features as all we use it for is lemmatizing
 data.setLexemeFilter(function (lexeme) { return Boolean(lexeme.lemma.word) })
@@ -866,7 +860,7 @@ class ImportData {
             // if the import returns an array, it should already have the sortOrder
             values = value
           } else {
-            values = [value, item.sortOrder]
+            values = [[value, item.sortOrder]]
           }
         } else if (model.typeFeature(featureName).hasValue(item.providerValue) ||
           model.typeFeature(featureName).valuesUnrestricted) {
