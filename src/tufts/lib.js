@@ -99,7 +99,7 @@ class ImportData {
             // if the import returns an array, it should already have the sortOrder
             values = value
           } else {
-            values = [value, item.sortOrder]
+            values = [[value, item.sortOrder]]
           }
         } else if (model.typeFeature(featureName).hasValue(item.providerValue) ||
           model.typeFeature(featureName).valuesUnrestricted) {
