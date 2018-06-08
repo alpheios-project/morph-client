@@ -59,7 +59,7 @@ describe('TuftsAdapter object', () => {
 
   test('we adapted mare properly', () => {
     let adapter = new TuftsAdapter()
-    let mare = require('../../src/tufts/engine/data/latin_noun_adj_mare.json')
+    let mare = require('./fixtures/latin_noun_adj_mare.json')
     let homonym = adapter.transform(mare)
     expect(homonym.lexemes.length).toEqual(3)
     let nounMare = homonym.lexemes.filter(l => l.lemma.word === 'mare')
@@ -83,7 +83,7 @@ describe('TuftsAdapter object', () => {
 
   test('we adapted cupidinibus properly', () => {
     let adapter = new TuftsAdapter()
-    let data = require('../../src/tufts/engine/data/latin_noun_cupidinibus.json')
+    let data = require('./fixtures/latin_noun_cupidinibus.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(2)
     let word = homonym.lexemes.filter(l => l.lemma.word === 'cupido')
@@ -95,7 +95,7 @@ describe('TuftsAdapter object', () => {
 
   test('parses dialect stemtype derivtype morph', () => {
     let adapter = new TuftsAdapter()
-    let word = require('../../src/tufts/engine/data/greek_elonu.json')
+    let word = require('./fixtures/greek_elonu.json')
     let homonym = adapter.transform(word)
     expect(homonym.lexemes.length).toEqual(1)
     expect(homonym.lexemes[0].inflections.length).toEqual(2)
@@ -107,7 +107,7 @@ describe('TuftsAdapter object', () => {
 
   test('multiple dict and mean entries', () => {
     let adapter = new TuftsAdapter()
-    let data = require('../../src/tufts/engine/data/latin_conditum.json')
+    let data = require('./fixtures/latin_conditum.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(6)
     expect(homonym.lexemes[5].meaning.shortDefs.length).toEqual(1)
@@ -125,7 +125,7 @@ describe('TuftsAdapter object', () => {
 
   test('lemma from infl', () => {
     let adapter = new TuftsAdapter()
-    let data = require('../../src/tufts/engine/data/latin_sui.json')
+    let data = require('./fixtures/latin_sui.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(6)
     expect(homonym.lexemes[5].lemma.word).toEqual('sui')
@@ -136,19 +136,19 @@ describe('TuftsAdapter object', () => {
 
   test('lemma filter', () => {
     let adapter = new TuftsAdapter()
-    let data = require('../../src/tufts/engine/data/latin_comp.json')
+    let data = require('./fixtures/latin_comp.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(2)
     expect(homonym.lexemes[0].lemma.word).toEqual('mellitus')
     expect(homonym.lexemes[1].lemma.word).toEqual('que')
-    data = require('../../src/tufts/engine/data/hazm.json')
+    data = require('./fixtures/hazm.json')
     homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(1)
   })
 
   test('multivalued features', () => {
     let adapter = new TuftsAdapter()
-    let data = require('../../src/tufts/engine/data/multival.json')
+    let data = require('./fixtures/multival.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(5)
     expect(homonym.lexemes[3].inflections[0].morph.values.length).toEqual(2)
@@ -156,9 +156,17 @@ describe('TuftsAdapter object', () => {
 
   test('lemma declension feature not set if pofs differs', () => {
     let adapter = new TuftsAdapter()
-    let data = require('../../src/tufts/engine/data/decl_lemma_mismatch.json')
+    let data = require('./fixtures/decl_lemma_mismatch.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes[0].lemma.features['part of speech'].value).toEqual('pronoun')
     expect(homonym.lexemes[0].lemma.features.declension).toBeFalsy()
+  })
+
+  test('inflection created if no stem', () => {
+    let adapter = new TuftsAdapter()
+    let data = require('./fixtures/nostem.json')
+    let homonym = adapter.transform(data)
+    expect(homonym.lexemes[1].inflections[0].stem).toBeNull()
+    expect(homonym.lexemes[1].inflections[0].suffix).toEqual('est')
   })
 })
