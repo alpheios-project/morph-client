@@ -90,7 +90,6 @@ describe('TuftsAdapter object', () => {
     expect(word.length).toEqual(1)
     expect(word[0].lemma.features.frequency.value).toEqual('frequent')
     expect(word[0].lemma.features.frequency.items[0].sortOrder).toEqual(5)
-    expect(word[0].lemma.features.source.value).toEqual('Ox.Lat.Dict.')
   })
 
   test('parses dialect stemtype derivtype morph', () => {
