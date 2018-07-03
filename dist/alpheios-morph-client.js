@@ -46,17 +46,32 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -226,7 +241,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _engine_data_test_data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./engine/data/test-data */ "./tufts/engine/data/test-data.js");
 /* harmony import */ var _config_json__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config.json */ "./tufts/config.json");
-var _config_json__WEBPACK_IMPORTED_MODULE_7___namespace = /*#__PURE__*/Object.assign({}, _config_json__WEBPACK_IMPORTED_MODULE_7__, {"default": _config_json__WEBPACK_IMPORTED_MODULE_7__});
+var _config_json__WEBPACK_IMPORTED_MODULE_7___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./config.json */ "./tufts/config.json", 1);
 
 
 
@@ -588,13 +603,13 @@ module.exports = {"RDF":{"Annotation":{"about":"urn:TuftsMorphologyService:cepit
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _latin_noun_cupidinibus_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./latin_noun_cupidinibus.json */ "./tufts/engine/data/latin_noun_cupidinibus.json");
-var _latin_noun_cupidinibus_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/Object.assign({}, _latin_noun_cupidinibus_json__WEBPACK_IMPORTED_MODULE_0__, {"default": _latin_noun_cupidinibus_json__WEBPACK_IMPORTED_MODULE_0__});
+var _latin_noun_cupidinibus_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./latin_noun_cupidinibus.json */ "./tufts/engine/data/latin_noun_cupidinibus.json", 1);
 /* harmony import */ var _latin_noun_adj_mare_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./latin_noun_adj_mare.json */ "./tufts/engine/data/latin_noun_adj_mare.json");
-var _latin_noun_adj_mare_json__WEBPACK_IMPORTED_MODULE_1___namespace = /*#__PURE__*/Object.assign({}, _latin_noun_adj_mare_json__WEBPACK_IMPORTED_MODULE_1__, {"default": _latin_noun_adj_mare_json__WEBPACK_IMPORTED_MODULE_1__});
+var _latin_noun_adj_mare_json__WEBPACK_IMPORTED_MODULE_1___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./latin_noun_adj_mare.json */ "./tufts/engine/data/latin_noun_adj_mare.json", 1);
 /* harmony import */ var _latin_verb_cepit_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./latin_verb_cepit.json */ "./tufts/engine/data/latin_verb_cepit.json");
-var _latin_verb_cepit_json__WEBPACK_IMPORTED_MODULE_2___namespace = /*#__PURE__*/Object.assign({}, _latin_verb_cepit_json__WEBPACK_IMPORTED_MODULE_2__, {"default": _latin_verb_cepit_json__WEBPACK_IMPORTED_MODULE_2__});
+var _latin_verb_cepit_json__WEBPACK_IMPORTED_MODULE_2___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./latin_verb_cepit.json */ "./tufts/engine/data/latin_verb_cepit.json", 1);
 /* harmony import */ var _greek_noun_pilsopo_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./greek_noun_pilsopo.json */ "./tufts/engine/data/greek_noun_pilsopo.json");
-var _greek_noun_pilsopo_json__WEBPACK_IMPORTED_MODULE_3___namespace = /*#__PURE__*/Object.assign({}, _greek_noun_pilsopo_json__WEBPACK_IMPORTED_MODULE_3__, {"default": _greek_noun_pilsopo_json__WEBPACK_IMPORTED_MODULE_3__});
+var _greek_noun_pilsopo_json__WEBPACK_IMPORTED_MODULE_3___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./greek_noun_pilsopo.json */ "./tufts/engine/data/greek_noun_pilsopo.json", 1);
 
 
 
