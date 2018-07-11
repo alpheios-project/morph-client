@@ -259,6 +259,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
     let jsonObj = await this.fetch(lang, word)
     if (jsonObj) {
       let homonym = this.transform(jsonObj, word)
+      homonym.lexemes.sort(Models.Lexeme.getSortByTwoLemmaFeatures(Models.Feature.types.frequency, Models.Feature.types.part))
       return homonym
     } else {
       // No data found for this word
