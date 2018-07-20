@@ -153,24 +153,26 @@ class ImportData {
    * @param {boolean} allowUnknownValues flag to indicate if unknown values are allowed
    */
   mapFeature (model, inputElem, inputName, featureName, allowUnknownValues) {
-    let values = []
     let inputItem = inputElem[inputName]
-    if (inputItem) {
-      if (Array.isArray(inputItem)) {
-        // There are multiple values of this feature
-        for (let e of inputItem) {
-          values.push(...this.parseProperty(inputName, e.$))
+    if (inputItem && (Array.isArray(inputItem) || inputItem.$)) {
+      let values = []
+      if (inputItem) {
+        if (Array.isArray(inputItem)) {
+          // There are multiple values of this feature
+          for (let e of inputItem) {
+            values.push(...this.parseProperty(inputName, e.$))
+          }
+        } else {
+          values = this.parseProperty(inputName, inputItem.$)
         }
-      } else {
-        values = this.parseProperty(inputName, inputItem.$)
+        // `values` is always an array as an array is a return value of `parseProperty`
       }
-      // `values` is always an array as an array is a return value of `parseProperty`
-    }
-    if (values.length > 0) {
-      // There are some values found
-      values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
-      let feature = this[Feature.types[featureName]].getMultiple(values, allowUnknownValues)
-      model.addFeature(feature)
+      if (values.length > 0) {
+        // There are some values found
+        values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
+        let feature = this[Feature.types[featureName]].getMultiple(values, allowUnknownValues)
+        model.addFeature(feature)
+      }
     }
   }
 }
