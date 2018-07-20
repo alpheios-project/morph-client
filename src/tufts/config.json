@@ -3,7 +3,8 @@
     "lat": ["whitakerLat"],
     "grc": ["morpheusgrc"],
     "ara": ["aramorph"],
-    "per": ["hazm"]
+    "per": ["hazm"],
+    "gez": ["traces"]
   },
   "url": "https://morph.alpheios.net/api/v1/analysis/word?word=r_WORD&engine=r_ENGINE&lang=r_LANG",
   "allowUnknownValues": true
