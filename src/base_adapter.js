@@ -1,3 +1,5 @@
+import * as Models from 'alpheios-data-models'
+
 /**
  * Base Adapter Class for a Morphology Service Client
  */
@@ -17,24 +19,25 @@ class BaseAdapter {
   /**
    * Lookup the supplied word using the preconfigured engines and
    * and return a Homonym
-   * @param {string} lang - ISO 639-2 language code for the word
+   * @param {symbol} languageID - A language ID as defined in Constants.LANG_XXX in data models
    * @param {string} word - the word to lookup
    * @return {Homonym} homonym object
    */
-  async getHomonym (lang, word) {
-    // implement in the derived adapater class
+  async getHomonym (languageID, word) {
+    // implement in the derived adapter class
     return undefined
   }
 
   /**
    * Fetch response from a remote URL
-   * @param {string} lang - the language code
+   * @param {symbol} languageID - A language ID
    * @param {string} word - the word to lookup
    * @returns {Promise} a promse which if successful resolves to json response object
    *                    with the results of the analysis
    */
-  fetch (lang, word) {
-    let url = this.prepareRequestUrl(lang, word)
+  fetch (languageID, word) {
+    const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -55,7 +58,7 @@ class BaseAdapter {
         }
         )
       } else {
-        reject(new Error(`Unable to prepare parser request url for ${lang}`))
+        reject(new Error(`Unable to prepare parser request url for ${languageID.toString()}`))
       }
     })
   }
