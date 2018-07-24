@@ -208,7 +208,11 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           ['dial', 'dialect'],
           ['morph', 'morph']
         ]) {
-          mappingData.mapFeature(inflection, inflectionJSON, ...f, this.config.allowUnknownValues)
+          try {
+            mappingData.mapFeature(inflection, inflectionJSON, ...f, this.config.allowUnknownValues)
+          } catch (e) {
+            console.log(`Unable to map ${f[0]}`, e)
+          }
         }
         // we only use the inflection if it tells us something the dictionary details do not
         if (inflection[Models.Feature.types.grmCase] ||

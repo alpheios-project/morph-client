@@ -171,7 +171,7 @@ describe('TuftsAdapter object', () => {
 
   test('can parse gez', () => {
     let adapter = new TuftsAdapter()
-    let data = require('./fixtures/gez.json')
+    let data = require('./fixtures/gez2.json')
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(10)
   })
