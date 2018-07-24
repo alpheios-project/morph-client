@@ -78,7 +78,6 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
     let lexmodel = new Models.Lexeme(lemma, [])
     let inflection = new Models.Inflection(lemmaText, model.languageID, null, null, null)
     let infl = jsonObj.words[0].word[0].entry[0].infl[0]
-    let obligatoryMatches = []
     inflection.addFeature(new Models.Feature(Models.Feature.types.fullForm, targetWord, model.languageID))
     let features = [
       ['pofs', 'part', true],

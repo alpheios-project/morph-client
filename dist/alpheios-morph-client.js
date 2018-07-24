@@ -423,7 +423,7 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
         let stem = inflectionJSON.term.stem ? inflectionJSON.term.stem.$ : null
         let suffix = inflectionJSON.term.suff ? inflectionJSON.term.suff.$ : null
         let prefix = inflectionJSON.term.pref ? inflectionJSON.term.pref.$ : null
-        let xmpl = inflectionJSON.xmlle ? inflectionJSON.xmpl.$ : null
+        let xmpl = inflectionJSON.xmple ? inflectionJSON.xmpl.$ : null
         let inflection = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Inflection"](stem, mappingData.model.languageID, suffix, prefix, xmpl)
         if (targetWord) {
           inflection.addFeature(new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.fullForm, targetWord, mappingData.model.languageID))
