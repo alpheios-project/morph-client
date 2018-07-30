@@ -502,7 +502,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
         let obj = model.typeFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types[featureType]).createFeatures(infl[localName][0]._text, 1)
         inflection.addFeature(obj)
         // add this feature to this list of features for obligatory matching
-        inflection.constraints.obligatoryMatches.push(featureType)
+        inflection.constraints.obligatoryMatches.push(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types[featureType])
         if (addToLemma) {
           lemma.addFeature(obj)
         }
