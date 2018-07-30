@@ -30,4 +30,10 @@ describe('AlpheiosTreebankAdapter object', () => {
     expect(homonym.lexemes[0].inflections[0].gender.value).toEqual('masculine')
     expect(homonym.lexemes[0].inflections[0].number.value).toEqual('plural')
   })
+
+  test('we prepared the url properly', () => {
+    let adapter = new AlpheiosTreebankAdapter()
+    let url = adapter.prepareRequestUrl('lat', '1999.02.0066#1-2')
+    expect(url).toEqual('http://tools.alpheios.net/exist/rest/db/xq/treebank-getmorph.xq?f=1999.02.0066&w=1-2')
+  })
 })

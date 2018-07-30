@@ -424,6 +424,16 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
     }
   }
 
+  prepareRequestUrl (lang, word) {
+    let [text, fragment] = word.split(/#/)
+    let url
+    if (this.config.texts.includes(text)) {
+      url = this.config.url.replace('r_TEXT', text)
+      url = url.replace('r_WORD', fragment)
+    }
+    return url
+  }
+
   /**
    * Fetch response from a remote URL
    * @override BaseAdapter#fetch
@@ -432,12 +442,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
    *                      e.g. 1999.02.0066#1-1
    */
   fetch (lang, word) {
-    let [text, fragment] = word.split(/#/)
-    let url
-    if (this.config.texts.includes(text)) {
-      url = this.config.url.replace('r_TEXT', text)
-      url = this.config.url.replace('r_WORD', fragment)
-    }
+    let url = this.prepareRequestUrl(lang, word)
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
