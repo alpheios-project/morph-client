@@ -435,6 +435,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
     let [text, fragment] = word.split(/#/)
     let url
     if (this.config.texts.includes(text)) {
+      url = this.config.url.replace('r_TEXT', text)
       url = this.config.url.replace('r_WORD', fragment)
     }
     return new Promise((resolve, reject) => {
@@ -538,7 +539,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
 /*! exports provided: texts, url, providerUri, providerRights, allowUnknownValues, default */
 /***/ (function(module) {
 
-module.exports = {"texts":["1999.02.0066","phi0959.phi006.alpheios-text-lat1"],"url":"http://tools.alpheios.net/exist/rest/db/xq/treebank-getmorph.xq?f=1999.02.0066&w=r_WORD","providerUri":"https://alpheios.net","providerRights":"The Alpheios Treebank data is licenced under the Creative Commons 3.0 Share-Alike license.","allowUnknownValues":true};
+module.exports = {"texts":["1999.02.0066","phi0959.phi006.alpheios-text-lat1"],"url":"http://tools.alpheios.net/exist/rest/db/xq/treebank-getmorph.xq?f=r_TEXT&w=r_WORD","providerUri":"https://alpheios.net","providerRights":"The Alpheios Treebank data is licenced under the Creative Commons 3.0 Share-Alike license.","allowUnknownValues":true};
 
 /***/ }),
 
