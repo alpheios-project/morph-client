@@ -548,6 +548,10 @@ module.exports = {"texts":["1999.02.0066","phi0959.phi006.alpheios-text-lat1"],"
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__);
+
+
 /**
  * Base Adapter Class for a Morphology Service Client
  */
@@ -567,24 +571,25 @@ class BaseAdapter {
   /**
    * Lookup the supplied word using the preconfigured engines and
    * and return a Homonym
-   * @param {string} lang - ISO 639-2 language code for the word
+   * @param {symbol} languageID - A language ID as defined in Constants.LANG_XXX in data models
    * @param {string} word - the word to lookup
    * @return {Homonym} homonym object
    */
-  async getHomonym (lang, word) {
-    // implement in the derived adapater class
+  async getHomonym (languageID, word) {
+    // implement in the derived adapter class
     return undefined
   }
 
   /**
    * Fetch response from a remote URL
-   * @param {string} lang - the language code
+   * @param {symbol} languageID - A language ID
    * @param {string} word - the word to lookup
    * @returns {Promise} a promse which if successful resolves to json response object
    *                    with the results of the analysis
    */
-  fetch (lang, word) {
-    let url = this.prepareRequestUrl(lang, word)
+  fetch (languageID, word) {
+    const langCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -605,7 +610,7 @@ class BaseAdapter {
         }
         )
       } else {
-        reject(new Error(`Unable to prepare parser request url for ${lang}`))
+        reject(new Error(`Unable to prepare parser request url for ${languageID.toString()}`))
       }
     })
   }
@@ -946,10 +951,11 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
     }
   }
 
-  async getHomonym (lang, word) {
-    let jsonObj = await this.fetch(lang, word)
+  async getHomonym (languageID, word) {
+    let jsonObj = await this.fetch(languageID, word)
     if (jsonObj) {
       let homonym = this.transform(jsonObj, word)
+      homonym.lexemes.sort(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Lexeme"].getSortByTwoLemmaFeatures(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.frequency, alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part))
       return homonym
     } else {
       // No data found for this word
