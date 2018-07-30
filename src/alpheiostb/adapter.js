@@ -39,8 +39,9 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
   *                       in a text in the form textid#wordid
    *                      e.g. 1999.02.0066#1-1
    */
-  fetch (lang, word) {
-    let url = this.prepareRequestUrl(lang, word)
+  fetch (languageID, word) {
+    const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -116,17 +117,23 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
     return new Models.Homonym([Models.ResourceProvider.getProxy(provider, lexmodel)], targetWord)
   }
 
-  async getHomonym (lang, word) {
-    let xmlString = await this.fetch(lang, word)
+  async getHomonym (languageID, word) {
+    let xmlString = await this.fetch(languageID, word)
     if (xmlString) {
+      let langCode = this.getLanguageCode(languageID)
+      console.log(`LangCode ${langCode}`)
       let jsonObj = xmlToJSON.parseString(xmlString)
-      jsonObj.words[0].word[0].entry[0].dict[0].hdwd[0]._attr = { lang: { _value: lang } }
+      jsonObj.words[0].word[0].entry[0].dict[0].hdwd[0]._attr = { lang: { _value: langCode } }
       let homonym = this.transform(jsonObj, jsonObj.words[0].word[0].form[0]._text)
       return homonym
     } else {
       // No data found for this word
       return undefined
     }
+  }
+
+  getLanguageCode (languageID) {
+    return Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
   }
 }
 

@@ -16,6 +16,9 @@ describe('AlpheiosTreebankAdapter object', () => {
 
   test('we adapted a word properly', async () => {
     let adapter = new AlpheiosTreebankAdapter()
+    const mockLangCode = jest.fn()
+    mockLangCode.mockReturnValue('lat')
+    adapter.getLanguageCode = mockLangCode
     adapter.fetch = () => {
       return new Promise((resolve, reject) => {
         resolve(fs.readFileSync(path.join(__dirname, 'fixtures', 'data.xml'), 'utf8'))

@@ -441,8 +441,9 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
   *                       in a text in the form textid#wordid
    *                      e.g. 1999.02.0066#1-1
    */
-  fetch (lang, word) {
-    let url = this.prepareRequestUrl(lang, word)
+  fetch (languageID, word) {
+    const langCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -518,17 +519,23 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
     return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Homonym"]([alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["ResourceProvider"].getProxy(provider, lexmodel)], targetWord)
   }
 
-  async getHomonym (lang, word) {
-    let xmlString = await this.fetch(lang, word)
+  async getHomonym (languageID, word) {
+    let xmlString = await this.fetch(languageID, word)
     if (xmlString) {
+      let langCode = this.getLanguageCode(languageID)
+      console.log(`LangCode ${langCode}`)
       let jsonObj = xmltojson__WEBPACK_IMPORTED_MODULE_3___default.a.parseString(xmlString)
-      jsonObj.words[0].word[0].entry[0].dict[0].hdwd[0]._attr = { lang: { _value: lang } }
+      jsonObj.words[0].word[0].entry[0].dict[0].hdwd[0]._attr = { lang: { _value: langCode } }
       let homonym = this.transform(jsonObj, jsonObj.words[0].word[0].form[0]._text)
       return homonym
     } else {
       // No data found for this word
       return undefined
     }
+  }
+
+  getLanguageCode (languageID) {
+    return alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
   }
 }
 
