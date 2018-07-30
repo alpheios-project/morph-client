@@ -73,6 +73,9 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
     let provider = new Models.ResourceProvider(providerUri, providerRights)
     let hdwd = jsonObj.words[0].word[0].entry[0].dict[0].hdwd[0]
     let lemmaText = hdwd._text
+    // the Alpheios v1 treebank data kept trailing digits on the lemmas
+    // these won't match morphology service lemmas which have them stripped
+    lemmaText = lemmaText.replace(/\d+$/, '')
     let model = this.models[hdwd._attr.lang._value]
     let lemma = new Models.Lemma(lemmaText, model.languageCode)
     let lexmodel = new Models.Lexeme(lemma, [])

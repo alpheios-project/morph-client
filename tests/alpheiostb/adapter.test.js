@@ -23,6 +23,7 @@ describe('AlpheiosTreebankAdapter object', () => {
     }
     let homonym = await adapter.getHomonym('lat', 'file#word')
     expect(homonym.lexemes.length).toEqual(1)
+    expect(homonym.lexemes[0].lemma.word).toEqual('suus')
     expect(homonym.lexemes[0].lemma.features['part of speech'].value).toEqual('adjective')
     expect(homonym.lexemes[0].inflections[0]['part of speech'].value).toEqual('adjective')
     expect(homonym.lexemes[0].inflections[0]['case'].value).toEqual('ablative')
