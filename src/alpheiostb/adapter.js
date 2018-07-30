@@ -33,6 +33,7 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
     let [text, fragment] = word.split(/#/)
     let url
     if (this.config.texts.includes(text)) {
+      url = this.config.url.replace('r_TEXT', text)
       url = this.config.url.replace('r_WORD', fragment)
     }
     return new Promise((resolve, reject) => {

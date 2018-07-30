@@ -3,7 +3,7 @@
     "1999.02.0066",
     "phi0959.phi006.alpheios-text-lat1"
   ],
-  "url": "http://tools.alpheios.net/exist/rest/db/xq/treebank-getmorph.xq?f=1999.02.0066&w=r_WORD",
+  "url": "http://tools.alpheios.net/exist/rest/db/xq/treebank-getmorph.xq?f=r_TEXT&w=r_WORD",
   "providerUri": "https://alpheios.net",
   "providerRights": "The Alpheios Treebank data is licenced under the Creative Commons 3.0 Share-Alike license.",
   "allowUnknownValues": true
