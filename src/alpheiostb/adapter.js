@@ -106,8 +106,6 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
       if (infl[localName]) {
         let obj = model.typeFeature(Models.Feature.types[featureType]).createFeatures(infl[localName][0]._text, 1)
         inflection.addFeature(obj)
-        // add this feature to this list of features for obligatory matching
-        inflection.constraints.obligatoryMatches.push(Models.Feature.types[featureType])
         if (addToLemma) {
           lemma.addFeature(obj)
         }
