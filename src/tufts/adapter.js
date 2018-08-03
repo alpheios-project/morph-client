@@ -179,7 +179,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         let stem = inflectionJSON.term.stem ? inflectionJSON.term.stem.$ : null
         let suffix = inflectionJSON.term.suff ? inflectionJSON.term.suff.$ : null
         let prefix = inflectionJSON.term.pref ? inflectionJSON.term.pref.$ : null
-        let xmpl = inflectionJSON.xmlle ? inflectionJSON.xmpl.$ : null
+        let xmpl = inflectionJSON.xmpl ? inflectionJSON.xmpl.$ : null
         let inflection = new Models.Inflection(stem, mappingData.model.languageID, suffix, prefix, xmpl)
         if (targetWord) {
           inflection.addFeature(new Models.Feature(Models.Feature.types.fullForm, targetWord, mappingData.model.languageID))

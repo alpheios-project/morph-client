@@ -1,0 +1,17 @@
+<words>
+    <word id="1-3">
+        <form lang="grc">suis</form>
+        <entry>
+            <dict>
+                <hdwd>suus1</hdwd>
+                <pofs>adjective</pofs>
+            </dict>
+            <infl>
+                <pofs>adjective</pofs>
+                <num>plural</num>
+                <gend>masculine</gend>
+                <case>ablative</case>
+            </infl>
+        </entry>
+    </word>
+</words>
