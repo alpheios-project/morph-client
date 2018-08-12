@@ -1,5 +1,5 @@
 import BaseAdapter from '../base_adapter'
-import * as Models from 'alpheios-data-models'
+import * as Models from 'alpheios-data-models-node'
 import DefaultConfig from './config.json'
 import xmlToJSON from 'xmltojson'
 

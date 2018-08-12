@@ -1,5 +1,5 @@
 import ImportData from '../lib'
-import * as Models from 'alpheios-data-models'
+import * as Models from 'alpheios-data-models-node'
 
 let data = new ImportData(Models.GreekLanguageModel, 'morpheusgrc')
 

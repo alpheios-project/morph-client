@@ -2,16 +2,16 @@ const webpack = {
   common: {
     entry: './driver.js',
     externals: {
-      'alpheios-data-models': 'alpheios-data-models'
+      'alpheios-data-models-node': 'alpheios-data-models-node'
     },
     target: "node"
   },
 
   production: {
-    output: {filename: 'alpheios-morph-client.min.js'}
+    output: {filename: 'alpheios-morph-client-node.min.js'}
   },
   development: {
-    output: {filename: 'alpheios-morph-client.js'}
+    output: {filename: 'alpheios-morph-client-node.js'}
   }
 }
 

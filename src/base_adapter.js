@@ -1,4 +1,4 @@
-import * as Models from 'alpheios-data-models'
+import * as Models from 'alpheios-data-models-node'
 import axios from 'axios'
 /**
  * Base Adapter Class for a Morphology Service Client
