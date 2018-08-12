@@ -1,5 +1,5 @@
 import * as Models from 'alpheios-data-models'
-
+import axios from 'axios'
 /**
  * Base Adapter Class for a Morphology Service Client
  */
@@ -28,16 +28,7 @@ class BaseAdapter {
     return undefined
   }
 
-  /**
-   * Fetch response from a remote URL
-   * @param {symbol} languageID - A language ID
-   * @param {string} word - the word to lookup
-   * @returns {Promise} a promse which if successful resolves to json response object
-   *                    with the results of the analysis
-   */
-  fetch (languageID, word) {
-    const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
-    let url = this.prepareRequestUrl(langCode, word)
+  fetchWindow (url, languageID) {
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -61,6 +52,34 @@ class BaseAdapter {
         reject(new Error(`Unable to prepare parser request url for ${languageID.toString()}`))
       }
     })
+  }
+
+  async fetchAxios (url, languageID) {
+    try {
+      let res = await axios.get(url)
+      return res.data
+    } catch (error) {
+      console.error(`Unable to prepare parser request url for ${languageID.toString()}`)
+    }
+  }
+  /**
+   * Fetch response from a remote URL
+   * @param {symbol} languageID - A language ID
+   * @param {string} word - the word to lookup
+   * @returns {Promise} a promse which if successful resolves to json response object
+   *                    with the results of the analysis
+   */
+  fetch (languageID, word) {
+    const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
+
+    if (typeof window !== 'undefined') {
+      console.info('************************fetch window', url)
+      return this.fetchWindow(url, languageID)
+    } else {
+      console.info('************************fetch axios', url)
+      return this.fetchAxios(url, languageID)
+    }
   }
 
   /**

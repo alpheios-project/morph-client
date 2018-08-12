@@ -42,6 +42,8 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
   fetch (languageID, word) {
     const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
     let url = this.prepareRequestUrl(langCode, word)
+    console.info('****************prepared Adapter.js', url)
+    /*
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -64,7 +66,7 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
       } else {
         reject(new Error(`Invalid or unknown reference ${word}`))
       }
-    })
+    }) */
   }
 
   /**
