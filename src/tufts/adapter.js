@@ -3,7 +3,7 @@ import Whitakers from './engine/whitakers'
 import Morpheusgrc from './engine/morpheusgrc'
 import Aramorph from './engine/aramorph'
 import Hazm from './engine/hazm'
-import * as Models from 'alpheios-data-models-node'
+import * as Models from 'alpheios-data-models'
 import WordTestData from './engine/data/test-data'
 import DefaultConfig from './config.json'
 

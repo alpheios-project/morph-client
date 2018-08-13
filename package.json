@@ -1,5 +1,5 @@
 {
-  "name": "alpheios-morph-client-node",
+  "name": "alpheios-morph-client",
   "version": "1.1.4",
   "description": "Alpheios Morphology Client Library",
   "main": "dist/alpheios-morph-client.min.js",
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/alpheios-project/morph-client#readme",
   "devDependencies": {
-    "alpheios-data-models-node": "github:alpheios-project/data-models#for-cmdtools",
+    "alpheios-data-models": "github:alpheios-project/data-models#for-cmdtools",
     "alpheios-node-build": "github:alpheios-project/node-build",
     "axios": "*",
     "babel-jest": "^23.4.2",

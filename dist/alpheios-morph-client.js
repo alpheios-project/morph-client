@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("alpheios-data-models-node"));
+		module.exports = factory(require("alpheios-data-models"));
 	else if(typeof define === 'function' && define.amd)
-		define(["alpheios-data-models-node"], factory);
+		define(["alpheios-data-models"], factory);
 	else {
-		var a = typeof exports === 'object' ? factory(require("alpheios-data-models-node")) : factory(root["alpheios-data-models-node"]);
+		var a = typeof exports === 'object' ? factory(require("alpheios-data-models")) : factory(root["alpheios-data-models"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(global, function(__WEBPACK_EXTERNAL_MODULE_alpheios_data_models_node__) {
+})(global, function(__WEBPACK_EXTERNAL_MODULE_alpheios_data_models__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -3541,8 +3541,8 @@ else if (true) !(__WEBPACK_AMD_DEFINE_RESULT__ = (function () { return xmlToJSON
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _base_adapter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../base_adapter */ "./base_adapter.js");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _config_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./config.json */ "./alpheiostb/config.json");
 var _config_json__WEBPACK_IMPORTED_MODULE_2___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./config.json */ "./alpheiostb/config.json", 1);
 /* harmony import */ var xmltojson__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! xmltojson */ "../node_modules/xmltojson/lib/xmlToJSON.js");
@@ -3566,8 +3566,8 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
       this.config = Object.assign({}, _config_json__WEBPACK_IMPORTED_MODULE_2__)
     }
     Object.assign(this.config, config)
-    this.models = { 'lat': alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["LatinLanguageModel"],
-      'grc': alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["GreekLanguageModel"]
+    this.models = { 'lat': alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LatinLanguageModel"],
+      'grc': alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["GreekLanguageModel"]
     }
   }
 
@@ -3589,7 +3589,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
    *                      e.g. 1999.02.0066#1-1
    */
   fetch (languageID, word) {
-    const langCode = alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
+    const langCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
     let url = this.prepareRequestUrl(langCode, word)
     console.info('****************prepared Adapter.js', url)
     /*
@@ -3628,18 +3628,18 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
     'use strict'
     let providerUri = this.config.providerUri
     let providerRights = this.config.providerRights
-    let provider = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["ResourceProvider"](providerUri, providerRights)
+    let provider = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["ResourceProvider"](providerUri, providerRights)
     let hdwd = jsonObj.words[0].word[0].entry[0].dict[0].hdwd[0]
     let lemmaText = hdwd._text
     // the Alpheios v1 treebank data kept trailing digits on the lemmas
     // these won't match morphology service lemmas which have them stripped
     lemmaText = lemmaText.replace(/\d+$/, '')
     let model = this.models[hdwd._attr.lang._value]
-    let lemma = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Lemma"](lemmaText, model.languageCode)
-    let lexmodel = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Lexeme"](lemma, [])
-    let inflection = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Inflection"](lemmaText, model.languageID, null, null, null)
+    let lemma = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Lemma"](lemmaText, model.languageCode)
+    let lexmodel = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Lexeme"](lemma, [])
+    let inflection = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Inflection"](lemmaText, model.languageID, null, null, null)
     let infl = jsonObj.words[0].word[0].entry[0].infl[0]
-    inflection.addFeature(new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"](alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.fullForm, targetWord, model.languageID))
+    inflection.addFeature(new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.fullForm, targetWord, model.languageID))
     let features = [
       ['pofs', 'part', true],
       ['case', 'grmCase', false],
@@ -3655,7 +3655,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
       let featureType = feature[1]
       let addToLemma = feature[2]
       if (infl[localName]) {
-        let obj = model.typeFeature(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"].types[featureType]).createFeatures(infl[localName][0]._text, 1)
+        let obj = model.typeFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types[featureType]).createFeatures(infl[localName][0]._text, 1)
         inflection.addFeature(obj)
         if (addToLemma) {
           lemma.addFeature(obj)
@@ -3663,7 +3663,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
       }
     }
     lexmodel.inflections = [ inflection ]
-    return new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Homonym"]([alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["ResourceProvider"].getProxy(provider, lexmodel)], targetWord)
+    return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Homonym"]([alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["ResourceProvider"].getProxy(provider, lexmodel)], targetWord)
   }
 
   async getHomonym (languageID, word) {
@@ -3682,7 +3682,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
   }
 
   getLanguageCode (languageID) {
-    return alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
+    return alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
   }
 }
 
@@ -3711,8 +3711,8 @@ module.exports = {"texts":["1999.01.0021","1999.01.0135","1999.02.0066","phi0959
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "../node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 
@@ -3787,7 +3787,7 @@ class BaseAdapter {
    *                    with the results of the analysis
    */
   fetch (languageID, word) {
-    const langCode = alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
+    const langCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
     let url = this.prepareRequestUrl(langCode, word)
 
     if (typeof window !== 'undefined') {
@@ -3873,8 +3873,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _engine_morpheusgrc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./engine/morpheusgrc */ "./tufts/engine/morpheusgrc.js");
 /* harmony import */ var _engine_aramorph__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./engine/aramorph */ "./tufts/engine/aramorph.js");
 /* harmony import */ var _engine_hazm__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./engine/hazm */ "./tufts/engine/hazm.js");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _engine_data_test_data__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./engine/data/test-data */ "./tufts/engine/data/test-data.js");
 /* harmony import */ var _config_json__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config.json */ "./tufts/config.json");
 var _config_json__WEBPACK_IMPORTED_MODULE_7___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./config.json */ "./tufts/config.json", 1);
@@ -3961,7 +3961,7 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
     if (jsonObj.RDF.Annotation.rights) {
       providerRights = jsonObj.RDF.Annotation.rights.$
     }
-    let provider = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"](providerUri, providerRights)
+    let provider = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"](providerUri, providerRights)
     for (let lexeme of annotationBody) {
       let inflectionsJSON = lexeme.rest.entry.infl
       if (!inflectionsJSON) {
@@ -4034,22 +4034,22 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
             let meaning = meanings[index]
             // TODO: convert a source-specific language code to ISO 639-3 if don't match
             let lang = meaning.lang ? meaning.lang : 'eng'
-            shortdefs.push(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"].getProxy(provider,
-              new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Definition"](meaning.$, lang, 'text/plain', lemmas[index].word)))
+            shortdefs.push(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"].getProxy(provider,
+              new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Definition"](meaning.$, lang, 'text/plain', lemmas[index].word)))
           }
         } else {
           // Changed to prevent some weird "Array Iterator.prototype.next called on incompatible receiver [object Unknown]" error
           let sDefs = meanings.map(meaning => {
             let lang = meaning.lang ? meaning.lang : 'eng'
-            return alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"].getProxy(provider,
-              new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Definition"](meaning.$, lang, 'text/plain', lemma.word))
+            return alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"].getProxy(provider,
+              new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Definition"](meaning.$, lang, 'text/plain', lemma.word))
           })
           shortdefs.push(...sDefs)
         }
-        let lexmodel = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Lexeme"](lemma, [])
+        let lexmodel = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Lexeme"](lemma, [])
 
         lexmodel.meaning.appendShortDefs(shortdefs)
-        lexemeSet.push(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"].getProxy(provider, lexmodel))
+        lexemeSet.push(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["ResourceProvider"].getProxy(provider, lexmodel))
       }
       if (lemmas.length === 0) {
         continue
@@ -4060,9 +4060,9 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
         let suffix = inflectionJSON.term.suff ? inflectionJSON.term.suff.$ : null
         let prefix = inflectionJSON.term.pref ? inflectionJSON.term.pref.$ : null
         let xmpl = inflectionJSON.xmpl ? inflectionJSON.xmpl.$ : null
-        let inflection = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Inflection"](stem, mappingData.model.languageID, suffix, prefix, xmpl)
+        let inflection = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Inflection"](stem, mappingData.model.languageID, suffix, prefix, xmpl)
         if (targetWord) {
-          inflection.addFeature(new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"](alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.fullForm, targetWord, mappingData.model.languageID))
+          inflection.addFeature(new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.fullForm, targetWord, mappingData.model.languageID))
         }
         // Parse whatever grammatical features we're interested in
         mappingData.mapFeature(inflection, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues)
@@ -4089,32 +4089,32 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
           mappingData.mapFeature(inflection, inflectionJSON, 'morph', 'morph', this.config.allowUnknownValues)
         }
         // we only use the inflection if it tells us something the dictionary details do not
-        if (inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.grmCase] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.tense] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.mood] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.voice] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.person] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.comparison] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.stemtype] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.derivtype] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.dialect] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.morph] ||
-          inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.example]) {
+        if (inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.grmCase] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.tense] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.mood] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.voice] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.person] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.comparison] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.stemtype] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.derivtype] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.dialect] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.morph] ||
+          inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.example]) {
           inflections.push(inflection)
         }
         // inflection can provide lemma decl, pofs, conj
         for (let lemma of lemmas) {
-          if (!lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part]) {
+          if (!lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part]) {
             mappingData.mapFeature(lemma, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues)
           }
           // only take declension from inflection if lemma has no part of speech or its the same as the inflection
-          if (!lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.declension] &&
-            (!lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part] || lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part].isEqual(inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part]))) {
+          if (!lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.declension] &&
+            (!lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part] || lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part].isEqual(inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part]))) {
             mappingData.mapFeature(lemma, inflectionJSON, 'decl', 'declension', this.config.allowUnknownValues)
           }
           // only take conjugation from inflection if lemma has a part of speech and its the same as the inflection
-          if (!lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.conjugation] &&
-            (!lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part] || lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part].isEqual(inflection[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part]))) {
+          if (!lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.conjugation] &&
+            (!lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part] || lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part].isEqual(inflection[alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part]))) {
             mappingData.mapFeature(lemma, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues)
           }
         }
@@ -4129,7 +4129,7 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
       }
     }
     if (lexemes.length > 0) {
-      return new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Homonym"](lexemes, targetWord)
+      return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Homonym"](lexemes, targetWord)
     } else {
       return undefined
     }
@@ -4139,7 +4139,7 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
     let jsonObj = await this.fetch(languageID, word)
     if (jsonObj) {
       let homonym = this.transform(jsonObj, word)
-      homonym.lexemes.sort(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Lexeme"].getSortByTwoLemmaFeatures(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.frequency, alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part))
+      homonym.lexemes.sort(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Lexeme"].getSortByTwoLemmaFeatures(alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.frequency, alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Feature"].types.part))
       return homonym
     } else {
       // No data found for this word
@@ -4174,12 +4174,12 @@ module.exports = {"engine":{"lat":["whitakerLat"],"grc":["morpheusgrc"],"ara":["
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib */ "./tufts/lib.js");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
-let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["ArabicLanguageModel"], 'aramorph')
+let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["ArabicLanguageModel"], 'aramorph')
 
 /* harmony default export */ __webpack_exports__["default"] = (data);
 
@@ -4284,12 +4284,12 @@ class WordTestData {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib */ "./tufts/lib.js");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
-let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["PersianLanguageModel"], 'hazm')
+let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["PersianLanguageModel"], 'hazm')
 
 // hazm allow all lemmas in without respect features as all we use it for is lemmatizing
 data.setLexemeFilter(function (lexeme) { return Boolean(lexeme.lemma.word) })
@@ -4309,12 +4309,12 @@ data.setLexemeFilter(function (lexeme) { return Boolean(lexeme.lemma.word) })
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib */ "./tufts/lib.js");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
-let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["GreekLanguageModel"], 'morpheusgrc')
+let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["GreekLanguageModel"], 'morpheusgrc')
 
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
@@ -4324,11 +4324,11 @@ data.addFeature(typeName).add(providerValueName, LibValueName);
 Types and values that are unknown (undefined) will be skipped during parsing.
  */
 
-data.addFeature(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.gender).importer
-  .map('masculine feminine', [[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_MASCULINE, 1], [alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_FEMININE, 2]])
+data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.gender).importer
+  .map('masculine feminine', [[alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_MASCULINE, 1], [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_FEMININE, 2]])
 
-data.addFeature(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.declension).importer
-  .map('1st & 2nd', [[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].ORD_1ST, 1], [alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].ORD_2ND, 2]])
+data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.declension).importer
+  .map('1st & 2nd', [[alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].ORD_1ST, 1], [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].ORD_2ND, 2]])
 
 /* harmony default export */ __webpack_exports__["default"] = (data);
 
@@ -4345,12 +4345,12 @@ data.addFeature(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib */ "./tufts/lib.js");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
-let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["LatinLanguageModel"], 'whitakerLat')
+let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LatinLanguageModel"], 'whitakerLat')
 
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
@@ -4363,12 +4363,12 @@ Types and values that are unknown (undefined) will be skipped during parsing.
 // TODO  - per inflections.xsd
 // Whitakers Words uses packon and tackon in POFS, not sure how
 
-data.addFeature(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.gender).importer
-  .map('common', [[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_MASCULINE, 1], [alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_FEMININE, 2]])
-  .map('all', [[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_MASCULINE, 1], [alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_FEMININE, 2], [alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_NEUTER, 3]])
+data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.gender).importer
+  .map('common', [[alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_MASCULINE, 1], [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_FEMININE, 2]])
+  .map('all', [[alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_MASCULINE, 1], [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_FEMININE, 2], [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].GEND_NEUTER, 3]])
 
-data.addFeature(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.tense).importer
-  .map('future_perfect', alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Constants"].TENSE_FUTURE_PERFECT)
+data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.tense).importer
+  .map('future_perfect', alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].TENSE_FUTURE_PERFECT)
 
 data.setLemmaParser(function (lemma) {
   // Whitaker's Words returns principal parts for some words
@@ -4384,7 +4384,7 @@ data.setLemmaParser(function (lemma) {
     parts.push(normalized)
   }
   if (primary) {
-    parsed = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_1__["Lemma"](primary, this.model.languageCode, parts)
+    parsed = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Lemma"](primary, this.model.languageCode, parts)
   }
 
   return parsed
@@ -4404,8 +4404,8 @@ data.setLemmaParser(function (lemma) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models-node */ "alpheios-data-models-node");
-/* harmony import */ var alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpheios-data-models */ "alpheios-data-models");
+/* harmony import */ var alpheios_data_models__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__);
 /*
 Objects of a morphology analyzer's library
  */
@@ -4431,7 +4431,7 @@ class ImportData {
       this.addFeature(featureName)
     }
     // may be overridden by specific engine use via setLemmaParser
-    this.parseLemma = function (lemma) { return new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__["Lemma"](lemma, this.model.languageID) }
+    this.parseLemma = function (lemma) { return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Lemma"](lemma, this.model.languageID) }
     // may be overridden by specific engine use via setPropertyParser - default just returns the property value
     // as a list
     this.parseProperty = function (propertyName, propertyValue) {
@@ -4447,7 +4447,7 @@ class ImportData {
     }
     // may be overridden by specifc engine use via setLexemeFilter - default assumes we will have a part of speech
     this.reportLexeme = function (lexeme) {
-      return lexeme.lemma.features[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.part]
+      return lexeme.lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.part]
     }
   }
 
@@ -4525,7 +4525,7 @@ class ImportData {
       return model.typeFeature(featureName).createFeatures(values)
     }
 
-    this[featureName].importer = new alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__["FeatureImporter"]()
+    this[featureName].importer = new alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["FeatureImporter"]()
 
     return this[featureName]
   }
@@ -4577,7 +4577,7 @@ class ImportData {
     if (values.length > 0) {
       // There are some values found
       values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
-      let feature = this[alpheios_data_models_node__WEBPACK_IMPORTED_MODULE_0__["Feature"].types[featureName]].getMultiple(values, allowUnknownValues)
+      let feature = this[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types[featureName]].getMultiple(values, allowUnknownValues)
       model.addFeature(feature)
     }
   }
@@ -4587,14 +4587,14 @@ class ImportData {
 
 /***/ }),
 
-/***/ "alpheios-data-models-node":
-/*!********************************************!*\
-  !*** external "alpheios-data-models-node" ***!
-  \********************************************/
+/***/ "alpheios-data-models":
+/*!***************************************!*\
+  !*** external "alpheios-data-models" ***!
+  \***************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_alpheios_data_models_node__;
+module.exports = __WEBPACK_EXTERNAL_MODULE_alpheios_data_models__;
 
 /***/ }),
 
@@ -4688,4 +4688,4 @@ module.exports = require("zlib");
 
 /******/ });
 });
-//# sourceMappingURL=alpheios-morph-client-node.js.map
+//# sourceMappingURL=alpheios-morph-client.js.map
