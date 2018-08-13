@@ -56,10 +56,10 @@ class BaseAdapter {
 
   async fetchAxios (url, languageID) {
     try {
-      let res = await axios.get(url)
+      let res = await axios.get(encodeURI(url))
       return res.data
     } catch (error) {
-      console.error(`Unable to prepare parser request url for ${languageID.toString()}`)
+      console.error(`Unable to prepare parser request url for ${languageID.toString()}`, url, error.message)
     }
   }
   /**
@@ -71,6 +71,7 @@ class BaseAdapter {
    */
   fetch (languageID, word) {
     const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
+    console.info('**********fetch', languageID, langCode, word)
     let url = this.prepareRequestUrl(langCode, word)
 
     if (typeof window !== 'undefined') {
