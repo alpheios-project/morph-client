@@ -74,10 +74,8 @@ class BaseAdapter {
     let url = this.prepareRequestUrl(langCode, word)
 
     if (typeof window !== 'undefined') {
-      console.info('************************fetch window', url)
       return this.fetchWindow(url, languageID)
     } else {
-      console.info('************************fetch axios', url)
       return this.fetchAxios(url, languageID)
     }
   }

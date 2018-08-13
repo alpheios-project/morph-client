@@ -3547,6 +3547,9 @@ __webpack_require__.r(__webpack_exports__);
 var _config_json__WEBPACK_IMPORTED_MODULE_2___namespace = /*#__PURE__*/__webpack_require__.t(/*! ./config.json */ "./alpheiostb/config.json", 1);
 /* harmony import */ var xmltojson__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! xmltojson */ "../node_modules/xmltojson/lib/xmlToJSON.js");
 /* harmony import */ var xmltojson__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(xmltojson__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "../node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
@@ -3581,18 +3584,7 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
     return url
   }
 
-  /**
-   * Fetch response from a remote URL
-   * @override BaseAdapter#fetch
-   * @param {String} word is expected to be a reference to a word identifier fragement
-  *                       in a text in the form textid#wordid
-   *                      e.g. 1999.02.0066#1-1
-   */
-  fetch (languageID, word) {
-    const langCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
-    let url = this.prepareRequestUrl(langCode, word)
-    console.info('****************prepared Adapter.js', url)
-    /*
+  fetchWindow (url, languageID) {
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -3613,9 +3605,35 @@ class AlpheiosTreebankAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__
         }
         )
       } else {
-        reject(new Error(`Invalid or unknown reference ${word}`))
+        reject(new Error(`Unable to prepare parser request url for ${languageID.toString()}`))
       }
-    }) */
+    })
+  }
+
+  async fetchAxios (url, languageID) {
+    try {
+      let res = await axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(url)
+      return res.data
+    } catch (error) {
+      console.error(`Unable to prepare parser request url for ${languageID.toString()}`)
+    }
+  }
+
+  /**
+   * Fetch response from a remote URL
+   * @override BaseAdapter#fetch
+   * @param {String} word is expected to be a reference to a word identifier fragement
+  *                       in a text in the form textid#wordid
+   *                      e.g. 1999.02.0066#1-1
+   */
+  fetch (languageID, word) {
+    const langCode = alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LanguageModelFactory"].getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
+    if (typeof window !== 'undefined') {
+      return this.fetchWindow(url, languageID)
+    } else {
+      return this.fetchAxios(url, languageID)
+    }
   }
 
   /**
@@ -3791,10 +3809,8 @@ class BaseAdapter {
     let url = this.prepareRequestUrl(langCode, word)
 
     if (typeof window !== 'undefined') {
-      console.info('************************fetch window', url)
       return this.fetchWindow(url, languageID)
     } else {
-      console.info('************************fetch axios', url)
       return this.fetchAxios(url, languageID)
     }
   }
