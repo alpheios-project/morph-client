@@ -71,7 +71,6 @@ class BaseAdapter {
    */
   fetch (languageID, word) {
     const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
-    console.info('**********fetch', languageID, langCode, word)
     let url = this.prepareRequestUrl(langCode, word)
 
     if (typeof window !== 'undefined') {
