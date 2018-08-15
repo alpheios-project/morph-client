@@ -175,4 +175,12 @@ describe('TuftsAdapter object', () => {
     let homonym = adapter.transform(data)
     expect(homonym.lexemes[0].lemma.word).toEqual('ego')
   })
+
+  test('parses irregular conjugations', () => {
+    let adapter = new TuftsAdapter()
+    let data = require('./fixtures/sum_irregular.json')
+    let homonym = adapter.transform(data)
+    expect(homonym.lexemes[2].lemma.features['conjugation'].value).toEqual('irregular')
+    expect(homonym.lexemes[2].inflections[0]['conjugation'].value).toEqual('irregular')
+  })
 })

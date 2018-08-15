@@ -21,6 +21,21 @@ data.addFeature(Models.Feature.types.gender).importer
 data.addFeature(Models.Feature.types.tense).importer
   .map('future_perfect', Models.Constants.TENSE_FUTURE_PERFECT)
 
+data.setPropertyParser(function (propertyName, propertyValue) {
+  let propertyValues = []
+  if (propertyName === 'decl') {
+    propertyValues = propertyValue.split('&').map((p) => p.trim())
+  } else if (propertyName === 'comp' && propertyValue === 'positive') {
+    propertyValues = []
+  } else if (propertyName === 'conj' && propertyValue.match(/5th|6th|7th|8th/)) {
+    // these are irregular verbs
+    propertyValues = [Models.Constants.TYPE_IRREGULAR]
+  } else {
+    propertyValues = [propertyValue]
+  }
+  return propertyValues
+})
+
 data.setLemmaParser(function (lemma) {
   // Whitaker's Words returns principal parts for some words
   // and sometimes has a space separted stem and suffix
