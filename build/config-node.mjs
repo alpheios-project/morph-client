@@ -14,8 +14,7 @@ const webpack = {
     output: {filename: 'alpheios-morph-client.node.min.js'},
     resolve: {
       alias: {
-        'alpheios-data-models': path.join(projectRoot, 'node_modules/alpheios-data-models/dist/alpheios-data-models.node.min.js'),
-        'alpheios-morph-client': path.join(projectRoot, 'node_modules/alpheios-morph-client/dist/alpheios-morph-client.node.min.js')
+        'alpheios-data-models': path.join(projectRoot, 'node_modules/alpheios-data-models/dist/alpheios-data-models.node.min.js')
       }
     }
   },
@@ -23,8 +22,7 @@ const webpack = {
     output: {filename: 'alpheios-morph-client.node.js'},
     resolve: {
       alias: {
-        'alpheios-data-models': path.join(projectRoot, 'node_modules/alpheios-data-models/dist/alpheios-data-models.node.js'),
-        'alpheios-morph-client': path.join(projectRoot, 'node_modules/alpheios-morph-client/dist/alpheios-morph-client.node.min.js')
+        'alpheios-data-models': path.join(projectRoot, 'node_modules/alpheios-data-models/dist/alpheios-data-models.node.js')
       }
     }
   }
