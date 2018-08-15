@@ -113,7 +113,10 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           if (!lexeme.rest.entry.dict.hdwd && inflectionsJSON[0].term) {
             lexeme.rest.entry.dict.hdwd = {}
             lexeme.rest.entry.dict.hdwd.lang = inflectionsJSON[0].term.lang
-            lexeme.rest.entry.dict.hdwd.$ = inflectionsJSON[0].term.stem.$ + inflectionsJSON[0].term.suff.$
+            lexeme.rest.entry.dict.hdwd.$ =
+              (inflectionsJSON[0].term.prefix ? inflectionsJSON[0].term.prefix.$ : '') +
+              (inflectionsJSON[0].term.stem ? inflectionsJSON[0].term.stem.$ : '') +
+              (inflectionsJSON[0].term.suff ? inflectionsJSON[0].term.suff.$ : '')
           }
           lemmaElements = [lexeme.rest.entry.dict]
         }

@@ -168,4 +168,11 @@ describe('TuftsAdapter object', () => {
     expect(homonym.lexemes[1].inflections[0].stem).toBeNull()
     expect(homonym.lexemes[1].inflections[0].suffix).toEqual('est')
   })
+
+  test('hdwd created if no hdwd suffix and no stem', () => {
+    let adapter = new TuftsAdapter()
+    let data = require('./fixtures/ego.json')
+    let homonym = adapter.transform(data)
+    expect(homonym.lexemes[0].lemma.word).toEqual('ego')
+  })
 })
