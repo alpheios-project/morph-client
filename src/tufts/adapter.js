@@ -242,14 +242,8 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           }
         }
       }
-      for (let lex of lexemeSet) {
-        // only process if we have a lemma that differs from the target
-        // word or if we have at least a part of speech
-        if (mappingData.reportLexeme(lex)) {
-          lex.inflections = inflections
-          lexemes.push(lex)
-        }
-      }
+      let aggregated = mappingData.aggregateLexemes(lexemeSet, inflections)
+      lexemes.push(...aggregated)
     }
     if (lexemes.length > 0) {
       return new Models.Homonym(lexemes, targetWord)

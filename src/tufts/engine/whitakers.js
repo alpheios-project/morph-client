@@ -36,6 +36,44 @@ data.setPropertyParser(function (propertyName, propertyValue) {
   return propertyValues
 })
 
+data.setLexemeAggregator(function (lexemeSet, inflections) {
+  let lexemes = []
+  for (let lex of lexemeSet) {
+    if (this.reportLexeme(lex)) {
+      if (lex.meaning.shortDefs.length === 0) {
+        for (let otherLex of lexemeSet) {
+          // same headword and same part of speech
+          if (otherLex.meaning.shortDefs.length > 0 && otherLex.lemma.isFullHomonym(lex.lemma)) {
+            let featuresMatch = true
+            for (let feature of Object.entries(lex.lemma.features)) {
+              // check the other features excluding frequency and source
+              if ((feature[0] !== Models.Feature.types.frequency) &&
+                    (feature[0] !== Models.Feature.types.source) &&
+                    !(feature[1].isEqual(otherLex.lemma.features[feature[0]]))) {
+                featuresMatch = false
+                break
+              }
+            }
+            // same lemma, same features, must be principal parts mismatch
+            if (featuresMatch) {
+              otherLex.addAltLemma(lex.lemma)
+            } else {
+              lex.inflections = inflections
+              lexemes.push(lex)
+            }
+          }
+        }
+      } else {
+        lex.inflections = inflections
+        lexemes.push(lex)
+      }
+    }
+  }
+  console.log(`lexemeSet was ${lexemeSet.length} resulting in ${lexemes.length}`)
+  return lexemes
+}
+)
+
 data.setLemmaParser(function (lemma) {
   // Whitaker's Words returns principal parts for some words
   // and sometimes has a space separted stem and suffix
