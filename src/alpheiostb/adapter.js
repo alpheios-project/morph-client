@@ -2,6 +2,7 @@ import BaseAdapter from '../base_adapter'
 import * as Models from 'alpheios-data-models'
 import DefaultConfig from './config.json'
 import xmlToJSON from 'xmltojson'
+import axios from 'axios'
 
 class AlpheiosTreebankAdapter extends BaseAdapter {
   /**
@@ -32,16 +33,7 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
     return url
   }
 
-  /**
-   * Fetch response from a remote URL
-   * @override BaseAdapter#fetch
-   * @param {String} word is expected to be a reference to a word identifier fragement
-  *                       in a text in the form textid#wordid
-   *                      e.g. 1999.02.0066#1-1
-   */
-  fetch (languageID, word) {
-    const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
-    let url = this.prepareRequestUrl(langCode, word)
+  fetchWindow (url, languageID) {
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -62,9 +54,35 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
         }
         )
       } else {
-        reject(new Error(`Invalid or unknown reference ${word}`))
+        reject(new Error(`Unable to prepare parser request url for ${languageID.toString()}`))
       }
     })
+  }
+
+  async fetchAxios (url, languageID) {
+    try {
+      let res = await axios.get(url)
+      return res.data
+    } catch (error) {
+      console.error(`Unable to prepare parser request url for ${languageID.toString()}`)
+    }
+  }
+
+  /**
+   * Fetch response from a remote URL
+   * @override BaseAdapter#fetch
+   * @param {String} word is expected to be a reference to a word identifier fragement
+  *                       in a text in the form textid#wordid
+   *                      e.g. 1999.02.0066#1-1
+   */
+  fetch (languageID, word) {
+    const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
+    if (typeof window !== 'undefined') {
+      return this.fetchWindow(url, languageID)
+    } else {
+      return this.fetchAxios(url, languageID)
+    }
   }
 
   /**
