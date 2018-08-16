@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/alpheios-project/morph-client#readme",
   "devDependencies": {
-    "alpheios-data-models": "github:alpheios-project/data-models",
+    "alpheios-data-models": "github:alpheios-project/data-models#issue-42",
     "alpheios-node-build": "github:alpheios-project/node-build#eslint-standard-conflict",
     "axios": "*",
     "babel-jest": "^23.4.2",

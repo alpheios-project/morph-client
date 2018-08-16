@@ -2757,7 +2757,10 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
           if (!lexeme.rest.entry.dict.hdwd && inflectionsJSON[0].term) {
             lexeme.rest.entry.dict.hdwd = {}
             lexeme.rest.entry.dict.hdwd.lang = inflectionsJSON[0].term.lang
-            lexeme.rest.entry.dict.hdwd.$ = inflectionsJSON[0].term.stem.$ + inflectionsJSON[0].term.suff.$
+            lexeme.rest.entry.dict.hdwd.$ =
+              (inflectionsJSON[0].term.prefix ? inflectionsJSON[0].term.prefix.$ : '') +
+              (inflectionsJSON[0].term.stem ? inflectionsJSON[0].term.stem.$ : '') +
+              (inflectionsJSON[0].term.suff ? inflectionsJSON[0].term.suff.$ : '')
           }
           lemmaElements = [lexeme.rest.entry.dict]
         }
@@ -2883,14 +2886,8 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
           }
         }
       }
-      for (let lex of lexemeSet) {
-        // only process if we have a lemma that differs from the target
-        // word or if we have at least a part of speech
-        if (mappingData.reportLexeme(lex)) {
-          lex.inflections = inflections
-          lexemes.push(lex)
-        }
-      }
+      let aggregated = mappingData.aggregateLexemes(lexemeSet, inflections)
+      lexemes.push(...aggregated)
     }
     if (lexemes.length > 0) {
       return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Homonym"](lexemes, targetWord)
@@ -3134,6 +3131,59 @@ data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].typ
 data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.tense).importer
   .map('future_perfect', alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].TENSE_FUTURE_PERFECT)
 
+data.setPropertyParser(function (propertyName, propertyValue) {
+  let propertyValues = []
+  if (propertyName === 'decl') {
+    propertyValues = propertyValue.split('&').map((p) => p.trim())
+  } else if (propertyName === 'comp' && propertyValue === 'positive') {
+    propertyValues = []
+  } else if (propertyName === 'conj' && propertyValue.match(/5th|6th|7th|8th/)) {
+    // these are irregular verbs
+    propertyValues = [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].TYPE_IRREGULAR]
+  } else {
+    propertyValues = [propertyValue]
+  }
+  return propertyValues
+})
+
+data.setLexemeAggregator(function (lexemeSet, inflections) {
+  let lexemes = []
+  for (let lex of lexemeSet) {
+    if (this.reportLexeme(lex)) {
+      if (lex.meaning.shortDefs.length === 0) {
+        for (let otherLex of lexemeSet) {
+          // same headword and same part of speech
+          if (otherLex.meaning.shortDefs.length > 0 && otherLex.lemma.isFullHomonym(lex.lemma)) {
+            let featuresMatch = true
+            for (let feature of Object.entries(lex.lemma.features)) {
+              // check the other features excluding frequency and source
+              if ((feature[0] !== alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.frequency) &&
+                    (feature[0] !== alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.source) &&
+                    !(feature[1].isEqual(otherLex.lemma.features[feature[0]]))) {
+                featuresMatch = false
+                break
+              }
+            }
+            // same lemma, same features, must be principal parts mismatch
+            if (featuresMatch) {
+              otherLex.addAltLemma(lex.lemma)
+            } else {
+              lex.inflections = inflections
+              lexemes.push(lex)
+            }
+          }
+        }
+      } else {
+        lex.inflections = inflections
+        lexemes.push(lex)
+      }
+    }
+  }
+  console.log(`lexemeSet was ${lexemeSet.length} resulting in ${lexemes.length}`)
+  return lexemes
+}
+)
+
 data.setLemmaParser(function (lemma) {
   // Whitaker's Words returns principal parts for some words
   // and sometimes has a space separted stem and suffix
@@ -3193,6 +3243,20 @@ class ImportData {
     // can return the default values if we don't need to import a mapping
     for (let featureName of Object.keys(this.model.features)) {
       this.addFeature(featureName)
+    }
+    // may be overridden by specific engine to handle vagaries in reporting of dictionary entries
+    // default just returns them as provided
+    this.aggregateLexemes = function (lexemeSet, inflections) {
+      let lexemes = []
+      for (let lex of lexemeSet) {
+        // only process if we have a lemma that differs from the target
+        // word or if we have at least a part of speech
+        if (this.reportLexeme(lex)) {
+          lex.inflections = inflections
+          lexemes.push(lex)
+        }
+      }
+      return lexemes
     }
     // may be overridden by specific engine use via setLemmaParser
     this.parseLemma = function (lemma) { return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Lemma"](lemma, this.model.languageID) }
@@ -3294,6 +3358,14 @@ class ImportData {
     return this[featureName]
   }
 
+  /**
+   * Add an engine-specific lexeme aggregator
+   */
+  setLexemeAggregator (callback) {
+    this.aggregateLexemes = callback
+  }
+
+  /**
   /**
    * Add an engine-specific lemma parser
    */

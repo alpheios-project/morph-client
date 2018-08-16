@@ -2019,7 +2019,7 @@ module.exports = {
 /*! exports provided: _args, _development, _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _spec, _where, author, browser, bugs, bundlesize, dependencies, description, devDependencies, homepage, keywords, license, main, name, repository, scripts, typings, version, default */
 /***/ (function(module) {
 
-module.exports = {"_args":[["axios@0.18.0","C:\\_Irina\\_clients\\_Alpheios Project\\git\\morph-client"]],"_development":true,"_from":"axios@0.18.0","_id":"axios@0.18.0","_inBundle":false,"_integrity":"sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.18.0","name":"axios","escapedName":"axios","rawSpec":"0.18.0","saveSpec":null,"fetchSpec":"0.18.0"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.18.0.tgz","_spec":"0.18.0","_where":"C:\\_Irina\\_clients\\_Alpheios Project\\git\\morph-client","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.3.0","is-buffer":"^1.1.5"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"bundlesize":"^0.5.7","coveralls":"^2.11.9","es6-promise":"^4.0.5","grunt":"^1.0.1","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.0.0","grunt-contrib-nodeunit":"^1.0.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^19.0.0","grunt-karma":"^2.0.0","grunt-ts":"^6.0.0-beta.3","grunt-webpack":"^1.0.18","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^1.3.0","karma-chrome-launcher":"^2.0.0","karma-coverage":"^1.0.0","karma-firefox-launcher":"^1.0.0","karma-jasmine":"^1.0.2","karma-jasmine-ajax":"^0.1.13","karma-opera-launcher":"^1.0.0","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^1.1.0","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^1.7.0","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","sinon":"^1.17.4","typescript":"^2.0.3","url-search-params":"^0.6.1","webpack":"^1.13.1","webpack-dev-server":"^1.14.1"},"homepage":"https://github.com/axios/axios","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test && bundlesize","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","version":"0.18.0"};
+module.exports = {"_args":[["axios@0.18.0","/home/balmas/workspace/mc"]],"_development":true,"_from":"axios@0.18.0","_id":"axios@0.18.0","_inBundle":false,"_integrity":"sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.18.0","name":"axios","escapedName":"axios","rawSpec":"0.18.0","saveSpec":null,"fetchSpec":"0.18.0"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.18.0.tgz","_spec":"0.18.0","_where":"/home/balmas/workspace/mc","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.3.0","is-buffer":"^1.1.5"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"bundlesize":"^0.5.7","coveralls":"^2.11.9","es6-promise":"^4.0.5","grunt":"^1.0.1","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.0.0","grunt-contrib-nodeunit":"^1.0.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^19.0.0","grunt-karma":"^2.0.0","grunt-ts":"^6.0.0-beta.3","grunt-webpack":"^1.0.18","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^1.3.0","karma-chrome-launcher":"^2.0.0","karma-coverage":"^1.0.0","karma-firefox-launcher":"^1.0.0","karma-jasmine":"^1.0.2","karma-jasmine-ajax":"^0.1.13","karma-opera-launcher":"^1.0.0","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^1.1.0","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^1.7.0","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","sinon":"^1.17.4","typescript":"^2.0.3","url-search-params":"^0.6.1","webpack":"^1.13.1","webpack-dev-server":"^1.14.1"},"homepage":"https://github.com/axios/axios","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test && bundlesize","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","version":"0.18.0"};
 
 /***/ }),
 
@@ -4009,7 +4009,10 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
           if (!lexeme.rest.entry.dict.hdwd && inflectionsJSON[0].term) {
             lexeme.rest.entry.dict.hdwd = {}
             lexeme.rest.entry.dict.hdwd.lang = inflectionsJSON[0].term.lang
-            lexeme.rest.entry.dict.hdwd.$ = inflectionsJSON[0].term.stem.$ + inflectionsJSON[0].term.suff.$
+            lexeme.rest.entry.dict.hdwd.$ =
+              (inflectionsJSON[0].term.prefix ? inflectionsJSON[0].term.prefix.$ : '') +
+              (inflectionsJSON[0].term.stem ? inflectionsJSON[0].term.stem.$ : '') +
+              (inflectionsJSON[0].term.suff ? inflectionsJSON[0].term.suff.$ : '')
           }
           lemmaElements = [lexeme.rest.entry.dict]
         }
@@ -4135,14 +4138,8 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
           }
         }
       }
-      for (let lex of lexemeSet) {
-        // only process if we have a lemma that differs from the target
-        // word or if we have at least a part of speech
-        if (mappingData.reportLexeme(lex)) {
-          lex.inflections = inflections
-          lexemes.push(lex)
-        }
-      }
+      let aggregated = mappingData.aggregateLexemes(lexemeSet, inflections)
+      lexemes.push(...aggregated)
     }
     if (lexemes.length > 0) {
       return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Homonym"](lexemes, targetWord)
@@ -4386,6 +4383,59 @@ data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].typ
 data.addFeature(alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.tense).importer
   .map('future_perfect', alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].TENSE_FUTURE_PERFECT)
 
+data.setPropertyParser(function (propertyName, propertyValue) {
+  let propertyValues = []
+  if (propertyName === 'decl') {
+    propertyValues = propertyValue.split('&').map((p) => p.trim())
+  } else if (propertyName === 'comp' && propertyValue === 'positive') {
+    propertyValues = []
+  } else if (propertyName === 'conj' && propertyValue.match(/5th|6th|7th|8th/)) {
+    // these are irregular verbs
+    propertyValues = [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Constants"].TYPE_IRREGULAR]
+  } else {
+    propertyValues = [propertyValue]
+  }
+  return propertyValues
+})
+
+data.setLexemeAggregator(function (lexemeSet, inflections) {
+  let lexemes = []
+  for (let lex of lexemeSet) {
+    if (this.reportLexeme(lex)) {
+      if (lex.meaning.shortDefs.length === 0) {
+        for (let otherLex of lexemeSet) {
+          // same headword and same part of speech
+          if (otherLex.meaning.shortDefs.length > 0 && otherLex.lemma.isFullHomonym(lex.lemma)) {
+            let featuresMatch = true
+            for (let feature of Object.entries(lex.lemma.features)) {
+              // check the other features excluding frequency and source
+              if ((feature[0] !== alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.frequency) &&
+                    (feature[0] !== alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.source) &&
+                    !(feature[1].isEqual(otherLex.lemma.features[feature[0]]))) {
+                featuresMatch = false
+                break
+              }
+            }
+            // same lemma, same features, must be principal parts mismatch
+            if (featuresMatch) {
+              otherLex.addAltLemma(lex.lemma)
+            } else {
+              lex.inflections = inflections
+              lexemes.push(lex)
+            }
+          }
+        }
+      } else {
+        lex.inflections = inflections
+        lexemes.push(lex)
+      }
+    }
+  }
+  console.log(`lexemeSet was ${lexemeSet.length} resulting in ${lexemes.length}`)
+  return lexemes
+}
+)
+
 data.setLemmaParser(function (lemma) {
   // Whitaker's Words returns principal parts for some words
   // and sometimes has a space separted stem and suffix
@@ -4445,6 +4495,20 @@ class ImportData {
     // can return the default values if we don't need to import a mapping
     for (let featureName of Object.keys(this.model.features)) {
       this.addFeature(featureName)
+    }
+    // may be overridden by specific engine to handle vagaries in reporting of dictionary entries
+    // default just returns them as provided
+    this.aggregateLexemes = function (lexemeSet, inflections) {
+      let lexemes = []
+      for (let lex of lexemeSet) {
+        // only process if we have a lemma that differs from the target
+        // word or if we have at least a part of speech
+        if (this.reportLexeme(lex)) {
+          lex.inflections = inflections
+          lexemes.push(lex)
+        }
+      }
+      return lexemes
     }
     // may be overridden by specific engine use via setLemmaParser
     this.parseLemma = function (lemma) { return new alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Lemma"](lemma, this.model.languageID) }
@@ -4546,6 +4610,14 @@ class ImportData {
     return this[featureName]
   }
 
+  /**
+   * Add an engine-specific lexeme aggregator
+   */
+  setLexemeAggregator (callback) {
+    this.aggregateLexemes = callback
+  }
+
+  /**
   /**
    * Add an engine-specific lemma parser
    */
