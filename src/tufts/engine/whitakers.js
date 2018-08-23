@@ -56,7 +56,14 @@ data.setLexemeAggregator(function (lexemeSet, inflections) {
             }
             // same lemma, same features, must be principal parts mismatch
             if (featuresMatch) {
-              otherLex.addAltLemma(lex.lemma)
+              // if this lemma has a higher frequency, make it the main lemma of the Lexeme and the existing one an alternative
+              if (lex.lemma.features[Models.Feature.types.frequency].compareTo(otherLex.lemma.features[Models.Feature.types.frequency]) < 1) {
+                otherLex.addAltLemma(otherLex.lemma)
+                otherLex.lemma = lex.lemma
+              } else {
+                // otherwise just add it to the alternative lemmas
+                otherLex.addAltLemma(lex.lemma)
+              }
             } else {
               lex.inflections = inflections
               lexemes.push(lex)

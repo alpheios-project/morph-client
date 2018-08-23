@@ -187,6 +187,7 @@ describe('TuftsAdapter object', () => {
     let homonym = adapter.transform(data)
     expect(homonym.lexemes.length).toEqual(1)
     expect(homonym.lexemes[0].altLemmas.length).toEqual(1)
-    expect(homonym.lexemes[0].altLemmas[0].principalParts).toEqual(['absum', 'abesse', 'afui', 'afuturus'])
+    expect(homonym.lexemes[0].altLemmas[0].principalParts).toEqual(['absum', 'abesse', 'abfui', 'abfuturus'])
+    expect(homonym.lexemes[0].lemma.principalParts).toEqual(['absum', 'abesse', 'afui', 'afuturus'])
   })
 })
