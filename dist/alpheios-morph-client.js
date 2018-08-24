@@ -2751,6 +2751,7 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
         ['kind', 'kind'],
         ['src', 'source']
       ]
+      let reconstructHdwd = []
       if (lexeme.rest.entry.dict) {
         if (Array.isArray(lexeme.rest.entry.dict)) {
           lemmaElements = lexeme.rest.entry.dict
@@ -2758,10 +2759,9 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
           if (!lexeme.rest.entry.dict.hdwd && inflectionsJSON[0].term) {
             lexeme.rest.entry.dict.hdwd = {}
             lexeme.rest.entry.dict.hdwd.lang = inflectionsJSON[0].term.lang
-            lexeme.rest.entry.dict.hdwd.$ =
-              (inflectionsJSON[0].term.prefix ? inflectionsJSON[0].term.prefix.$ : '') +
-              (inflectionsJSON[0].term.stem ? inflectionsJSON[0].term.stem.$ : '') +
-              (inflectionsJSON[0].term.suff ? inflectionsJSON[0].term.suff.$ : '')
+            reconstructHdwd.push(inflectionsJSON[0].term.prefix ? inflectionsJSON[0].term.prefix.$ : '')
+            reconstructHdwd.push(inflectionsJSON[0].term.stem ? inflectionsJSON[0].term.stem.$ : '')
+            reconstructHdwd.push(inflectionsJSON[0].term.suff ? inflectionsJSON[0].term.suff.$ : '')
           }
           lemmaElements = [lexeme.rest.entry.dict]
         }
@@ -2773,6 +2773,12 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
       let language = lemmaElements[0].hdwd ? lemmaElements[0].hdwd.lang : lemmaElements[0].lang
       // Get importer based on the language
       let mappingData = this.getEngineLanguageMap(language)
+      if (reconstructHdwd.length > 0) {
+        if (mappingData.model.direction === alpheios_data_models__WEBPACK_IMPORTED_MODULE_5__["Constants"].LANG_DIR_RTL) {
+          reconstructHdwd.reverse()
+        }
+        lexeme.rest.entry.dict.hdwd.$ = reconstructHdwd.join('')
+      }
       let lemmas = []
       let lexemeSet = []
       for (let entry of lemmaElements.entries()) {
@@ -3187,7 +3193,6 @@ data.setLexemeAggregator(function (lexemeSet, inflections) {
       }
     }
   }
-  console.log(`lexemeSet was ${lexemeSet.length} resulting in ${lexemes.length}`)
   return lexemes
 }
 )

@@ -76,7 +76,6 @@ data.setLexemeAggregator(function (lexemeSet, inflections) {
       }
     }
   }
-  console.log(`lexemeSet was ${lexemeSet.length} resulting in ${lexemes.length}`)
   return lexemes
 }
 )
