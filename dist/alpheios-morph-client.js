@@ -3157,7 +3157,7 @@ data.setLexemeAggregator(function (lexemeSet, inflections) {
   let lexemes = []
   for (let lex of lexemeSet) {
     if (this.reportLexeme(lex)) {
-      if (lex.meaning.shortDefs.length === 0) {
+      if (lex.meaning.shortDefs.length === 0 && lexemeSet.length > 1) {
         for (let otherLex of lexemeSet) {
           // same headword and same part of speech
           if (otherLex.meaning.shortDefs.length > 0 && otherLex.lemma.isFullHomonym(lex.lemma)) {
