@@ -104,7 +104,8 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         ['freq', 'frequency'],
         ['note', 'note'],
         ['pron', 'pronunciation'],
-        ['kind', 'kind']
+        ['kind', 'kind'],
+        ['src', 'source']
       ]
       if (lexeme.rest.entry.dict) {
         if (Array.isArray(lexeme.rest.entry.dict)) {

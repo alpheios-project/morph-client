@@ -2748,7 +2748,8 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
         ['freq', 'frequency'],
         ['note', 'note'],
         ['pron', 'pronunciation'],
-        ['kind', 'kind']
+        ['kind', 'kind'],
+        ['src', 'source']
       ]
       if (lexeme.rest.entry.dict) {
         if (Array.isArray(lexeme.rest.entry.dict)) {
