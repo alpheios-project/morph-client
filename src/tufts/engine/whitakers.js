@@ -21,6 +21,65 @@ data.addFeature(Models.Feature.types.gender).importer
 data.addFeature(Models.Feature.types.tense).importer
   .map('future_perfect', Models.Constants.TENSE_FUTURE_PERFECT)
 
+data.setPropertyParser(function (propertyName, propertyValue) {
+  let propertyValues = []
+  if (propertyName === 'decl') {
+    propertyValues = propertyValue.split('&').map((p) => p.trim())
+  } else if (propertyName === 'comp' && propertyValue === 'positive') {
+    propertyValues = []
+  } else if (propertyName === 'conj' && propertyValue.match(/5th|6th|7th|8th/)) {
+    // these are irregular verbs
+    propertyValues = [Models.Constants.TYPE_IRREGULAR]
+  } else {
+    propertyValues = [propertyValue]
+  }
+  return propertyValues
+})
+
+data.setLexemeAggregator(function (lexemeSet, inflections) {
+  let lexemes = []
+  for (let lex of lexemeSet) {
+    if (this.reportLexeme(lex)) {
+      if (lex.meaning.shortDefs.length === 0 && lexemeSet.length > 1) {
+        for (let otherLex of lexemeSet) {
+          // same headword and same part of speech
+          if (otherLex.meaning.shortDefs.length > 0 && otherLex.lemma.isFullHomonym(lex.lemma)) {
+            let featuresMatch = true
+            for (let feature of Object.entries(lex.lemma.features)) {
+              // check the other features excluding frequency and source
+              if ((feature[0] !== Models.Feature.types.frequency) &&
+                    (feature[0] !== Models.Feature.types.source) &&
+                    !(feature[1].isEqual(otherLex.lemma.features[feature[0]]))) {
+                featuresMatch = false
+                break
+              }
+            }
+            // same lemma, same features, must be principal parts mismatch
+            if (featuresMatch) {
+              // if this lemma has a higher frequency, make it the main lemma of the Lexeme and the existing one an alternative
+              if (lex.lemma.features[Models.Feature.types.frequency].compareTo(otherLex.lemma.features[Models.Feature.types.frequency]) < 1) {
+                otherLex.addAltLemma(otherLex.lemma)
+                otherLex.lemma = lex.lemma
+              } else {
+                // otherwise just add it to the alternative lemmas
+                otherLex.addAltLemma(lex.lemma)
+              }
+            } else {
+              lex.inflections = inflections
+              lexemes.push(lex)
+            }
+          }
+        }
+      } else {
+        lex.inflections = inflections
+        lexemes.push(lex)
+      }
+    }
+  }
+  return lexemes
+}
+)
+
 data.setLemmaParser(function (lemma) {
   // Whitaker's Words returns principal parts for some words
   // and sometimes has a space separted stem and suffix

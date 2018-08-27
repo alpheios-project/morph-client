@@ -16,4 +16,15 @@ describe('Whitakers', () => {
     let lemma = Whitakers.parseLemma(parse)
     expect(lemma.word).toEqual('cap')
   })
+
+  test('parses irregular conjugation', () => {
+    let parsed = Whitakers.parseProperty('conj', '5th')
+    expect(parsed).toEqual([Constants.TYPE_IRREGULAR])
+    parsed = Whitakers.parseProperty('conj', '6th')
+    expect(parsed).toEqual([Constants.TYPE_IRREGULAR])
+    parsed = Whitakers.parseProperty('conj', '7th')
+    expect(parsed).toEqual([Constants.TYPE_IRREGULAR])
+    parsed = Whitakers.parseProperty('conj', '8th')
+    expect(parsed).toEqual([Constants.TYPE_IRREGULAR])
+  })
 })
