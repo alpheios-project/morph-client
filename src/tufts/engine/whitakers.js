@@ -46,10 +46,11 @@ data.setLexemeAggregator(function (lexemeSet, inflections) {
           if (otherLex.meaning.shortDefs.length > 0 && otherLex.lemma.isFullHomonym(lex.lemma)) {
             let featuresMatch = true
             for (let feature of Object.entries(lex.lemma.features)) {
-              // check the other features excluding frequency and source
+              // check the other features excluding frequency, source and age
               if ((feature[0] !== Models.Feature.types.frequency) &&
-                    (feature[0] !== Models.Feature.types.source) &&
-                    !(feature[1].isEqual(otherLex.lemma.features[feature[0]]))) {
+                   (feature[0] !== Models.Feature.types.source) &&
+                   (feature[0] !== Models.Feature.types.age) &&
+                   !(feature[1].isEqual(otherLex.lemma.features[feature[0]]))) {
                 featuresMatch = false
                 break
               }
