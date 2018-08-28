@@ -190,4 +190,12 @@ describe('TuftsAdapter object', () => {
     expect(homonym.lexemes[0].altLemmas[0].principalParts).toEqual(['absum', 'abesse', 'abfui', 'abfuturus'])
     expect(homonym.lexemes[0].lemma.principalParts).toEqual(['absum', 'abesse', 'afui', 'afuturus'])
   })
+
+  test('adsum', () => {
+    let adapter = new TuftsAdapter()
+    let data = require('./fixtures/adsum.json')
+    let homonym = adapter.transform(data)
+    // tests that lemmas with different age can be aggregated
+    expect(homonym.lexemes.length).toEqual(2)
+  })
 })
