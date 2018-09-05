@@ -4695,17 +4695,15 @@ class ImportData {
     let inputItem = inputElem[inputName]
     if (inputItem && (Array.isArray(inputItem) || inputItem.$)) {
       let values = []
-      if (inputItem) {
-        if (Array.isArray(inputItem)) {
-          // There are multiple values of this feature
-          for (let e of inputItem) {
-            values.push(...this.parseProperty(inputName, e.$))
-          }
-        } else {
-          values = this.parseProperty(inputName, inputItem.$)
+      if (Array.isArray(inputItem)) {
+        // There are multiple values of this feature
+        for (let e of inputItem) {
+          values.push(...this.parseProperty(inputName, e.$))
         }
-        // `values` is always an array as an array is a return value of `parseProperty`
+      } else {
+        values = this.parseProperty(inputName, inputItem.$)
       }
+      // `values` is always an array as an array is a return value of `parseProperty`
       if (values.length > 0) {
         // There are some values found
         values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
