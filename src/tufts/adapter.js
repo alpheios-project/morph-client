@@ -105,8 +105,10 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         ['freq', 'frequency'],
         ['note', 'note'],
         ['pron', 'pronunciation'],
-        ['kind', 'kind']
+        ['kind', 'kind'],
+        ['src', 'source']
       ]
+      let reconstructHdwd = []
       if (lexeme.rest.entry.dict) {
         if (Array.isArray(lexeme.rest.entry.dict)) {
           lemmaElements = lexeme.rest.entry.dict
@@ -114,7 +116,9 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           if (!lexeme.rest.entry.dict.hdwd && inflectionsJSON[0].term) {
             lexeme.rest.entry.dict.hdwd = {}
             lexeme.rest.entry.dict.hdwd.lang = inflectionsJSON[0].term.lang
-            lexeme.rest.entry.dict.hdwd.$ = inflectionsJSON[0].term.stem.$ + inflectionsJSON[0].term.suff.$
+            reconstructHdwd.push(inflectionsJSON[0].term.prefix ? inflectionsJSON[0].term.prefix.$ : '')
+            reconstructHdwd.push(inflectionsJSON[0].term.stem ? inflectionsJSON[0].term.stem.$ : '')
+            reconstructHdwd.push(inflectionsJSON[0].term.suff ? inflectionsJSON[0].term.suff.$ : '')
           }
           lemmaElements = [lexeme.rest.entry.dict]
         }
@@ -129,6 +133,12 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
       if (!mappingData) {
         console.log(`No mapping data found for ${language}`)
         continue
+      }
+      if (reconstructHdwd.length > 0) {
+        if (mappingData.model.direction === Models.Constants.LANG_DIR_RTL) {
+          reconstructHdwd.reverse()
+        }
+        lexeme.rest.entry.dict.hdwd.$ = reconstructHdwd.join('')
       }
       let lemmas = []
       let lexemeSet = []
@@ -245,14 +255,8 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           }
         }
       }
-      for (let lex of lexemeSet) {
-        // only process if we have a lemma that differs from the target
-        // word or if we have at least a part of speech
-        if (mappingData.reportLexeme(lex)) {
-          lex.inflections = inflections
-          lexemes.push(lex)
-        }
-      }
+      let aggregated = mappingData.aggregateLexemes(lexemeSet, inflections)
+      lexemes.push(...aggregated)
     }
     if (lexemes.length > 0) {
       return new Models.Homonym(lexemes, targetWord)
@@ -261,10 +265,11 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
     }
   }
 
-  async getHomonym (lang, word) {
-    let jsonObj = await this.fetch(lang, word)
+  async getHomonym (languageID, word) {
+    let jsonObj = await this.fetch(languageID, word)
     if (jsonObj) {
       let homonym = this.transform(jsonObj, word)
+      homonym.lexemes.sort(Models.Lexeme.getSortByTwoLemmaFeatures(Models.Feature.types.frequency, Models.Feature.types.part))
       return homonym
     } else {
       // No data found for this word

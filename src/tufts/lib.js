@@ -22,6 +22,20 @@ class ImportData {
     for (let featureName of Object.keys(this.model.features)) {
       this.addFeature(featureName)
     }
+    // may be overridden by specific engine to handle vagaries in reporting of dictionary entries
+    // default just returns them as provided
+    this.aggregateLexemes = function (lexemeSet, inflections) {
+      let lexemes = []
+      for (let lex of lexemeSet) {
+        // only process if we have a lemma that differs from the target
+        // word or if we have at least a part of speech
+        if (this.reportLexeme(lex)) {
+          lex.inflections = inflections
+          lexemes.push(lex)
+        }
+      }
+      return lexemes
+    }
     // may be overridden by specific engine use via setLemmaParser
     this.parseLemma = function (lemma) { return new Lemma(lemma, this.model.languageID) }
     // may be overridden by specific engine use via setPropertyParser - default just returns the property value
@@ -122,6 +136,14 @@ class ImportData {
     return this[featureName]
   }
 
+  /**
+   * Add an engine-specific lexeme aggregator
+   */
+  setLexemeAggregator (callback) {
+    this.aggregateLexemes = callback
+  }
+
+  /**
   /**
    * Add an engine-specific lemma parser
    */

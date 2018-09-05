@@ -1,3 +1,5 @@
+import * as Models from 'alpheios-data-models'
+import axios from 'axios'
 /**
  * Base Adapter Class for a Morphology Service Client
  */
@@ -17,24 +19,16 @@ class BaseAdapter {
   /**
    * Lookup the supplied word using the preconfigured engines and
    * and return a Homonym
-   * @param {string} lang - ISO 639-2 language code for the word
+   * @param {symbol} languageID - A language ID as defined in Constants.LANG_XXX in data models
    * @param {string} word - the word to lookup
    * @return {Homonym} homonym object
    */
-  async getHomonym (lang, word) {
-    // implement in the derived adapater class
+  async getHomonym (languageID, word) {
+    // implement in the derived adapter class
     return undefined
   }
 
-  /**
-   * Fetch response from a remote URL
-   * @param {string} lang - the language code
-   * @param {string} word - the word to lookup
-   * @returns {Promise} a promse which if successful resolves to json response object
-   *                    with the results of the analysis
-   */
-  fetch (lang, word) {
-    let url = this.prepareRequestUrl(lang, word)
+  fetchWindow (url, languageID) {
     return new Promise((resolve, reject) => {
       if (url) {
         window.fetch(url).then(
@@ -55,9 +49,35 @@ class BaseAdapter {
         }
         )
       } else {
-        reject(new Error(`Unable to prepare parser request url for ${lang}`))
+        reject(new Error(`Unable to prepare parser request url for ${languageID.toString()}`))
       }
     })
+  }
+
+  async fetchAxios (url, languageID) {
+    try {
+      let res = await axios.get(encodeURI(url))
+      return res.data
+    } catch (error) {
+      console.error(`Unable to prepare parser request url for ${languageID.toString()}`, url, error.message)
+    }
+  }
+  /**
+   * Fetch response from a remote URL
+   * @param {symbol} languageID - A language ID
+   * @param {string} word - the word to lookup
+   * @returns {Promise} a promse which if successful resolves to json response object
+   *                    with the results of the analysis
+   */
+  fetch (languageID, word) {
+    const langCode = Models.LanguageModelFactory.getLanguageCodeFromId(languageID)
+    let url = this.prepareRequestUrl(langCode, word)
+
+    if (typeof window !== 'undefined') {
+      return this.fetchWindow(url, languageID)
+    } else {
+      return this.fetchAxios(url, languageID)
+    }
   }
 
   /**
