@@ -166,6 +166,13 @@ describe('TuftsAdapter object', () => {
     expect(homonym.lexemes[1].inflections[0].suffix).toEqual('est')
   })
 
+  test('can parse gez', () => {
+    let adapter = new TuftsAdapter()
+    let data = require('./fixtures/gez.json')
+    let homonym = adapter.transform(data, 'gezdummy')
+    expect(homonym.lexemes.length).toEqual(10)
+  })
+
   test('hdwd created if no hdwd suffix and no stem', () => {
     let adapter = new TuftsAdapter()
     let data = require('./fixtures/ego.json')

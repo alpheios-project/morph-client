@@ -3,6 +3,7 @@ import Whitakers from './engine/whitakers'
 import Morpheusgrc from './engine/morpheusgrc'
 import Aramorph from './engine/aramorph'
 import Hazm from './engine/hazm'
+import Traces from './engine/traces'
 import * as Models from 'alpheios-data-models'
 import WordTestData from './engine/data/test-data'
 import DefaultConfig from './config.json'
@@ -21,7 +22,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
       this.config = Object.assign({}, DefaultConfig)
     }
     Object.assign(this.config, config)
-    this.engineMap = new Map(([ Whitakers, Morpheusgrc, Aramorph, Hazm ]).map((e) => { return [ e.engine, e ] }))
+    this.engineMap = new Map(([ Whitakers, Morpheusgrc, Aramorph, Hazm, Traces ]).map((e) => { return [ e.engine, e ] }))
   }
 
   getEngineLanguageMap (lang) {
@@ -129,6 +130,10 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
       let language = lemmaElements[0].hdwd ? lemmaElements[0].hdwd.lang : lemmaElements[0].lang
       // Get importer based on the language
       let mappingData = this.getEngineLanguageMap(language)
+      if (!mappingData) {
+        console.log(`No mapping data found for ${language}`)
+        continue
+      }
       if (reconstructHdwd.length > 0) {
         if (mappingData.model.direction === Models.Constants.LANG_DIR_RTL) {
           reconstructHdwd.reverse()
@@ -146,6 +151,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
           lemmaText = elem.hdwd.$
         }
         if (!lemmaText || !language) {
+          console.log('No lemma or language found')
           continue
         }
         let lemma = mappingData.parseLemma(lemmaText, language)
@@ -194,29 +200,29 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         if (targetWord) {
           inflection.addFeature(new Models.Feature(Models.Feature.types.fullForm, targetWord, mappingData.model.languageID))
         }
-        // Parse whatever grammatical features we're interested in
-        mappingData.mapFeature(inflection, inflectionJSON, 'pofs', 'part', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'case', 'grmCase', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'decl', 'declension', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'num', 'number', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'gend', 'gender', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'conj', 'conjugation', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'tense', 'tense', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'voice', 'voice', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'mood', 'mood', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'pers', 'person', this.config.allowUnknownValues)
-        mappingData.mapFeature(inflection, inflectionJSON, 'comp', 'comparison', this.config.allowUnknownValues)
-        if (inflectionJSON.stemtype) {
-          mappingData.mapFeature(inflection, inflectionJSON, 'stemtype', 'stemtype', this.config.allowUnknownValues)
-        }
-        if (inflectionJSON.derivtype) {
-          mappingData.mapFeature(inflection, inflectionJSON, 'derivtype', 'derivtype', this.config.allowUnknownValues)
-        }
-        if (inflectionJSON.dial) {
-          mappingData.mapFeature(inflection, inflectionJSON, 'dial', 'dialect', this.config.allowUnknownValues)
-        }
-        if (inflectionJSON.morph) {
-          mappingData.mapFeature(inflection, inflectionJSON, 'morph', 'morph', this.config.allowUnknownValues)
+        // Parse whatever grammatical features we're interested in and are provided
+        for (let f of [
+          ['pofs', 'part'],
+          ['case', 'grmCase'],
+          ['decl', 'declension'],
+          ['num', 'number'],
+          ['gend', 'gender'],
+          ['conj', 'conjugation'],
+          ['tense', 'tense'],
+          ['voice', 'voice'],
+          ['mood', 'mood'],
+          ['pers', 'person'],
+          ['comp', 'comparison'],
+          ['stemtype', 'stemtype'],
+          ['derivtype', 'derivtype'],
+          ['dial', 'dialect'],
+          ['morph', 'morph']
+        ]) {
+          try {
+            mappingData.mapFeature(inflection, inflectionJSON, ...f, this.config.allowUnknownValues)
+          } catch (e) {
+            console.log(`Unable to map ${f[0]}`, e)
+          }
         }
         // we only use the inflection if it tells us something the dictionary details do not
         if (inflection[Models.Feature.types.grmCase] ||

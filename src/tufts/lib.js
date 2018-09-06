@@ -175,9 +175,9 @@ class ImportData {
    * @param {boolean} allowUnknownValues flag to indicate if unknown values are allowed
    */
   mapFeature (model, inputElem, inputName, featureName, allowUnknownValues) {
-    let values = []
     let inputItem = inputElem[inputName]
-    if (inputItem) {
+    if (inputItem && (Array.isArray(inputItem) || inputItem.$)) {
+      let values = []
       if (Array.isArray(inputItem)) {
         // There are multiple values of this feature
         for (let e of inputItem) {
@@ -187,12 +187,12 @@ class ImportData {
         values = this.parseProperty(inputName, inputItem.$)
       }
       // `values` is always an array as an array is a return value of `parseProperty`
-    }
-    if (values.length > 0) {
-      // There are some values found
-      values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
-      let feature = this[Feature.types[featureName]].getMultiple(values, allowUnknownValues)
-      model.addFeature(feature)
+      if (values.length > 0) {
+        // There are some values found
+        values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
+        let feature = this[Feature.types[featureName]].getMultiple(values, allowUnknownValues)
+        model.addFeature(feature)
+      }
     }
   }
 }
