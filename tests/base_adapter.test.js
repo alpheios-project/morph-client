@@ -19,7 +19,7 @@ describe('BaseAdapter object', () => {
   })
 
   test('fetch call', async () => {
-    let dummyResponse = {'foo': 'bar'}
+    let dummyResponse = { 'foo': 'bar' }
     adapter.prepareRequestUrl = jest.fn(() => 'dummy')
     window.fetch.mockResponse(JSON.stringify(dummyResponse))
     let response = await adapter.fetch('lat', 'mare')

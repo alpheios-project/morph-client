@@ -42,7 +42,7 @@ describe('TuftsAdapter object', () => {
   })
 
   test('unmapped values with no defaults throws an error if unknown values not allowed', () => {
-    let adapter = new TuftsAdapter({'allowUnknownValues': false})
+    let adapter = new TuftsAdapter({ 'allowUnknownValues': false })
     expect(() => {
       let retrieved = adapter.getEngineLanguageMap('grc')[Models.Feature.types.person].get('1') // eslint-disable-line no-unused-vars
     }).toThrowError(/unknown value/i)
