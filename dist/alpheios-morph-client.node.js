@@ -4136,6 +4136,7 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
         ]) {
           try {
             mappingData.mapFeature(inflection, inflectionJSON, ...f, this.config.allowUnknownValues)
+            mappingData.overrideInflectionFeature(f[1], inflection, lemmas)
           } catch (e) {
             console.log(`Unable to map ${f[0]}`, e)
           }
@@ -4422,6 +4423,10 @@ __webpack_require__.r(__webpack_exports__);
 
 let data = new _lib__WEBPACK_IMPORTED_MODULE_0__["default"](alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["LatinLanguageModel"], 'whitakerLat')
 
+// Whitaker's has weird inflection data for conjugation, we prefer
+// the dictionary entry's conjugation if it's available
+data.inflectionOverrides = [alpheios_data_models__WEBPACK_IMPORTED_MODULE_1__["Feature"].types.conjugation]
+
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
 Format:
@@ -4593,6 +4598,10 @@ class ImportData {
     this.reportLexeme = function (lexeme) {
       return lexeme.lemma.features[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types.part]
     }
+
+    // may be overriden by specific engine use to a list of of featureTypes which
+    // should be overridden in the inflection data from the lemma data
+    this.inflectionOverrides = []
   }
 
   /**
@@ -4730,6 +4739,21 @@ class ImportData {
         values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
         let feature = this[alpheios_data_models__WEBPACK_IMPORTED_MODULE_0__["Feature"].types[featureName]].getMultiple(values, allowUnknownValues)
         model.addFeature(feature)
+      }
+    }
+  }
+
+  /**
+   * Overrides feature data from an inflection with feature data from the lemma
+   * only applies to engine-specific list of featureTypes
+   * @param {String} featureType the feature type name
+   * @param {Inflection} inflection the inflection object
+   * @param {Lemma[]} lemmas the lemma objects
+   */
+  overrideInflectionFeature (featureType, inflection, lemmas) {
+    if (this.inflectionOverrides.includes(featureType)) {
+      for (let lemma of lemmas.filter(l => l.features[featureType])) {
+        inflection.addFeature(lemma.features[featureType])
       }
     }
   }

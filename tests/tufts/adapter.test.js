@@ -205,4 +205,14 @@ describe('TuftsAdapter object', () => {
     // tests that lemmas with different age can be aggregated
     expect(homonym.lexemes.length).toEqual(2)
   })
+
+  test('overrides inflection with lemma for auditum', () => {
+    let adapter = new TuftsAdapter()
+    let data = require('./fixtures/whitaker_auditum.json')
+    let homonym = adapter.transform(data)
+    expect(homonym.lexemes[0].inflections.length).toEqual(5)
+    expect(homonym.lexemes[0].inflections.filter(i => i.conjugation.value === '4th').length).toEqual(5)
+    expect(homonym.lexemes[0].inflections.filter(i => i.conjugation.value === '3rd').length).toEqual(0)
+    expect(homonym.lexemes[0].lemma.features.conjugation.value).toEqual('4th')
+  })
 })
