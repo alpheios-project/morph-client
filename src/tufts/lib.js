@@ -202,12 +202,12 @@ class ImportData {
 
   /**
    * Overrides feature data from an inflection with feature data from the lemma
-   * only applies to engine-specific list of featureTypes
+   * if required by an engine-specific list of featureTypes
    * @param {String} featureType the feature type name
    * @param {Inflection} inflection the inflection object
    * @param {Lemma[]} lemmas the lemma objects
    */
-  overrideInflectionFeature (featureType, inflection, lemmas) {
+  overrideInflectionFeatureIfRequired (featureType, inflection, lemmas) {
     if (this.inflectionOverrides.includes(featureType)) {
       for (let lemma of lemmas.filter(l => l.features[featureType])) {
         inflection.addFeature(lemma.features[featureType])

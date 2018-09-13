@@ -4136,7 +4136,7 @@ class AlpheiosTuftsAdapter extends _base_adapter__WEBPACK_IMPORTED_MODULE_0__["d
         ]) {
           try {
             mappingData.mapFeature(inflection, inflectionJSON, ...f, this.config.allowUnknownValues)
-            mappingData.overrideInflectionFeature(f[1], inflection, lemmas)
+            mappingData.overrideInflectionFeatureIfRequired(f[1], inflection, lemmas)
           } catch (e) {
             console.log(`Unable to map ${f[0]}`, e)
           }
@@ -4745,12 +4745,12 @@ class ImportData {
 
   /**
    * Overrides feature data from an inflection with feature data from the lemma
-   * only applies to engine-specific list of featureTypes
+   * if required by an engine-specific list of featureTypes
    * @param {String} featureType the feature type name
    * @param {Inflection} inflection the inflection object
    * @param {Lemma[]} lemmas the lemma objects
    */
-  overrideInflectionFeature (featureType, inflection, lemmas) {
+  overrideInflectionFeatureIfRequired (featureType, inflection, lemmas) {
     if (this.inflectionOverrides.includes(featureType)) {
       for (let lemma of lemmas.filter(l => l.features[featureType])) {
         inflection.addFeature(lemma.features[featureType])

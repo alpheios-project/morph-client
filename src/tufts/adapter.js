@@ -220,7 +220,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
         ]) {
           try {
             mappingData.mapFeature(inflection, inflectionJSON, ...f, this.config.allowUnknownValues)
-            mappingData.overrideInflectionFeature(f[1], inflection, lemmas)
+            mappingData.overrideInflectionFeatureIfRequired(f[1], inflection, lemmas)
           } catch (e) {
             console.log(`Unable to map ${f[0]}`, e)
           }

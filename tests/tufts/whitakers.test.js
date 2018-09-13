@@ -40,7 +40,7 @@ describe('Whitakers', () => {
       features: { conjugation: 'foo' }
     }
     jest.spyOn(mockInflection, 'addFeature')
-    Whitakers.overrideInflectionFeature('conjugation', mockInflection, [mockLemma])
+    Whitakers.overrideInflectionFeatureIfRequired('conjugation', mockInflection, [mockLemma])
     expect(mockInflection.addFeature).toHaveBeenCalled()
   })
 
@@ -52,7 +52,7 @@ describe('Whitakers', () => {
       features: { declension: 'foo' }
     }
     jest.spyOn(mockInflection, 'addFeature')
-    Whitakers.overrideInflectionFeature('declension', mockInflection, [mockLemma])
+    Whitakers.overrideInflectionFeatureIfRequired('declension', mockInflection, [mockLemma])
     expect(mockInflection.addFeature).not.toHaveBeenCalled()
   })
 
@@ -64,7 +64,7 @@ describe('Whitakers', () => {
       features: { }
     }
     jest.spyOn(mockInflection, 'addFeature')
-    Whitakers.overrideInflectionFeature('conjugation', mockInflection, [mockLemma])
+    Whitakers.overrideInflectionFeatureIfRequired('conjugation', mockInflection, [mockLemma])
     expect(mockInflection.addFeature).not.toHaveBeenCalled()
   })
 })
