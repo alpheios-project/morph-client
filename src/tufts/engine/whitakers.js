@@ -3,6 +3,10 @@ import * as Models from 'alpheios-data-models'
 
 let data = new ImportData(Models.LatinLanguageModel, 'whitakerLat')
 
+// Whitaker's has weird inflection data for conjugation, we prefer
+// the dictionary entry's conjugation if it's available
+data.inflectionOverrides = [Models.Feature.types.conjugation]
+
 /*
 Below are value conversion maps for each grammatical feature to be parsed.
 Format:

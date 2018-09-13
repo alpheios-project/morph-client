@@ -55,6 +55,10 @@ class ImportData {
     this.reportLexeme = function (lexeme) {
       return lexeme.lemma.features[Feature.types.part]
     }
+
+    // may be overriden by specific engine use to a list of of featureTypes which
+    // should be overridden in the inflection data from the lemma data
+    this.inflectionOverrides = []
   }
 
   /**
@@ -192,6 +196,21 @@ class ImportData {
         values = values.map(v => { return { providerValue: v, sortOrder: inputItem.order ? inputItem.order : 1 } })
         let feature = this[Feature.types[featureName]].getMultiple(values, allowUnknownValues)
         model.addFeature(feature)
+      }
+    }
+  }
+
+  /**
+   * Overrides feature data from an inflection with feature data from the lemma
+   * if required by an engine-specific list of featureTypes
+   * @param {String} featureType the feature type name
+   * @param {Inflection} inflection the inflection object
+   * @param {Lemma[]} lemmas the lemma objects
+   */
+  overrideInflectionFeatureIfRequired (featureType, inflection, lemmas) {
+    if (this.inflectionOverrides.includes(featureType)) {
+      for (let lemma of lemmas.filter(l => l.features[featureType])) {
+        inflection.addFeature(lemma.features[featureType])
       }
     }
   }
