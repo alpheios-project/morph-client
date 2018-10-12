@@ -35,8 +35,8 @@ describe('AlpheiosTreebankAdapter object', () => {
   })
 
   test('we prepared the url properly', () => {
-    let adapter = new AlpheiosTreebankAdapter()
+    let adapter = new AlpheiosTreebankAdapter({ clientId: 'fooClient' })
     let url = adapter.prepareRequestUrl('lat', '1999.02.0066#1-2')
-    expect(url).toEqual('http://tools.alpheios.net/exist/rest/db/xq/treebank-getmorph.xq?f=1999.02.0066&w=1-2')
+    expect(url).toEqual('http://tools.alpheios.net/exist/rest/db/xq/treebank-getmorph.xq?f=1999.02.0066&w=1-2&clientId=fooClient')
   })
 })

@@ -37,7 +37,7 @@ class AlpheiosTuftsAdapter extends BaseAdapter {
     let engine = this.getEngineLanguageMap(lang)
     if (engine) {
       let code = engine.engine
-      return this.config.url.replace('r_WORD', word).replace('r_ENGINE', code).replace('r_LANG', lang)
+      return this.config.url.replace('r_WORD', word).replace('r_ENGINE', code).replace('r_LANG', lang).replace('r_CLIENT', this.config.clientId)
     } else {
       return null
     }

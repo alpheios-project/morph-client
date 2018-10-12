@@ -215,4 +215,9 @@ describe('TuftsAdapter object', () => {
     expect(homonym.lexemes[0].inflections.filter(i => i.conjugation.value === '3rd').length).toEqual(0)
     expect(homonym.lexemes[0].lemma.features.conjugation.value).toEqual('4th')
   })
+
+  test('adds clientId to URL', () => {
+    let adapter = new TuftsAdapter({ clientId: 'fooClient' })
+    expect(adapter.prepareRequestUrl('lat', 'mare')).toEqual('https://morph.alpheios.net/api/v1/analysis/word?word=mare&engine=whitakerLat&lang=lat&clientId=fooClient')
+  })
 })
