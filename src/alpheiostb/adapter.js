@@ -28,7 +28,7 @@ class AlpheiosTreebankAdapter extends BaseAdapter {
     let url
     if (this.config.texts.includes(text)) {
       url = this.config.url.replace('r_TEXT', text)
-      url = url.replace('r_WORD', fragment)
+      url = url.replace('r_WORD', fragment).replace('r_CLIENT', this.config.clientId)
     }
     return url
   }
